@@ -83,7 +83,6 @@ irm https://astral.sh/uv/install.ps1 | iex
 # 1. project setup
 cd repo
 uv init --bare
-uv python pin 3.11
 uv venv
 .venv\Scripts\Activate.ps1
 uv pip install -r requirements.txt
