@@ -98,32 +98,35 @@ def call_api(payload: dict) -> dict:
     return r.json()
 
 
-# --------------------------------------------------------------------- sidebar
 # --------------------------------------------------------------------- Sidebar Setup
 
 st.sidebar.header("1. Pick a claim case")
 all_cases = {c["case_id"]: c for c in load_public_cases() + load_custom_cases()}
 
 
-# Helper callbacks to clear competing inputs and previous analysis
+if "uploader_version" not in st.session_state:
+    st.session_state["uploader_version"] = 0
+
+
 def clear_analysis():
-    """Clears cached analysis results when input choices change."""
+    """Safely clears old analysis results."""
     if "analysis_result" in st.session_state:
         del st.session_state["analysis_result"]
 
 
 def on_file_uploaded():
-    """Triggered when a user uploads a JSON file — clears pasted text."""
+    """Triggered when a file is uploaded — clears pasted text safely."""
     clear_analysis()
-    if st.session_state.get("file_uploader_key") is not None:
-        st.session_state["pasted_json_key"] = ""  # Clear pasted text box
+    # It is safe to assign to a text area string state
+    st.session_state["pasted_json_input"] = ""
 
 
 def on_text_pasted():
-    """Triggered when a user types/pastes text — clears uploaded file."""
+    """Triggered when text is pasted — resets file uploader by changing its key version."""
     clear_analysis()
-    if st.session_state.get("pasted_json_key"):
-        st.session_state["file_uploader_key"] = None  # Reset file uploader
+    if st.session_state.get("pasted_json_input"):
+        # Incrementing the key version forces Streamlit to create a fresh, empty file uploader
+        st.session_state["uploader_version"] += 1
 
 
 mode = st.sidebar.radio(
@@ -149,23 +152,24 @@ if mode == "Pick a sample case":
         st.sidebar.warning("No sample cases found under data/ or eval/cases/.")
 
 else:
-    # 1. File Uploader with mutual exclusion callback
+    # Use a dynamic key so changing the version re-renders an empty file uploader safely
+    dynamic_uploader_key = f"file_uploader_{st.session_state['uploader_version']}"
+
     uploaded = st.sidebar.file_uploader(
         "Upload a claim case JSON",
         type=["json"],
-        key="file_uploader_key",
+        key=dynamic_uploader_key,
         on_change=on_file_uploaded,
     )
 
-    # 2. Text Area with mutual exclusion callback
     pasted = st.sidebar.text_area(
         "...or paste JSON here",
         height=200,
-        key="pasted_json_key",
+        key="pasted_json_input",
         on_change=on_text_pasted,
     )
 
-    # Priority routing: use uploaded file if present, otherwise pasted text
+    # Route payload cleanly
     if uploaded is not None:
         try:
             case_payload = json.loads(uploaded.read())
