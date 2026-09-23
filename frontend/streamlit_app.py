@@ -64,7 +64,7 @@ def _render_llm_status():
         col1, col2 = st.columns([4, 1])
         with col1:
             st.success(
-                f"🤖 **LLM configured: `{provider}`** — used *only* to rephrase already-computed "
+                f" **LLM configured: `{provider}`** — used *only* to rephrase already-computed "
                 f"findings for readability. It never decides the outcome or touches any number."
             )
         with col2:
@@ -99,32 +99,91 @@ def call_api(payload: dict) -> dict:
 
 
 # --------------------------------------------------------------------- sidebar
+# --------------------------------------------------------------------- Sidebar Setup
+
 st.sidebar.header("1. Pick a claim case")
 all_cases = {c["case_id"]: c for c in load_public_cases() + load_custom_cases()}
-mode = st.sidebar.radio("Input method", ["Pick a sample case", "Paste / upload JSON"])
+
+
+# Helper callbacks to clear competing inputs and previous analysis
+def clear_analysis():
+    """Clears cached analysis results when input choices change."""
+    if "analysis_result" in st.session_state:
+        del st.session_state["analysis_result"]
+
+
+def on_file_uploaded():
+    """Triggered when a user uploads a JSON file — clears pasted text."""
+    clear_analysis()
+    if st.session_state.get("file_uploader_key") is not None:
+        st.session_state["pasted_json_key"] = ""  # Clear pasted text box
+
+
+def on_text_pasted():
+    """Triggered when a user types/pastes text — clears uploaded file."""
+    clear_analysis()
+    if st.session_state.get("pasted_json_key"):
+        st.session_state["file_uploader_key"] = None  # Reset file uploader
+
+
+mode = st.sidebar.radio(
+    "Input method",
+    ["Pick a sample case", "Paste / upload JSON"],
+    on_change=clear_analysis,
+)
 
 case_payload = None
+
 if mode == "Pick a sample case":
     if all_cases:
-        cid = st.sidebar.selectbox("Case", list(all_cases.keys()))
+        cid = st.sidebar.selectbox(
+            "Case",
+            list(all_cases.keys()),
+            key="selected_case_id",
+            on_change=clear_analysis,
+        )
         case_payload = all_cases[cid]
         with st.sidebar.expander("View raw case JSON"):
             st.json(case_payload, expanded=False)
     else:
         st.sidebar.warning("No sample cases found under data/ or eval/cases/.")
+
 else:
-    uploaded = st.sidebar.file_uploader("Upload a claim case JSON", type=["json"])
-    pasted = st.sidebar.text_area("...or paste JSON here", height=200)
-    if uploaded:
-        case_payload = json.loads(uploaded.read())
+    # 1. File Uploader with mutual exclusion callback
+    uploaded = st.sidebar.file_uploader(
+        "Upload a claim case JSON",
+        type=["json"],
+        key="file_uploader_key",
+        on_change=on_file_uploaded,
+    )
+
+    # 2. Text Area with mutual exclusion callback
+    pasted = st.sidebar.text_area(
+        "...or paste JSON here",
+        height=200,
+        key="pasted_json_key",
+        on_change=on_text_pasted,
+    )
+
+    # Priority routing: use uploaded file if present, otherwise pasted text
+    if uploaded is not None:
+        try:
+            case_payload = json.loads(uploaded.read())
+        except Exception as e:
+            st.sidebar.error(f"Invalid uploaded JSON file: {e}")
     elif pasted.strip():
         try:
             case_payload = json.loads(pasted)
         except json.JSONDecodeError as e:
-            st.sidebar.error(f"Invalid JSON: {e}")
+            st.sidebar.error(f"Invalid JSON in text area: {e}")
 
 st.sidebar.header("2. Analyze")
-analyze_clicked = st.sidebar.button("Analyze claim", type="primary", disabled=case_payload is None, use_container_width=True)
+analyze_clicked = st.sidebar.button(
+    "Analyze claim",
+    type="primary",
+    disabled=case_payload is None,
+    use_container_width=True,
+)
 
 with st.sidebar.expander("Backend health"):
     try:
@@ -133,19 +192,24 @@ with st.sidebar.expander("Backend health"):
     except Exception as e:
         st.error(f"Backend unreachable: {e}")
 
-if not analyze_clicked or case_payload is None:
+if analyze_clicked and case_payload is not None:
+    with st.spinner("Running the multi-agent pipeline..."):
+        try:
+            st.session_state["analysis_result"] = call_api(case_payload)
+        except requests.HTTPError as e:
+            st.error(f"API error: {e.response.status_code} - {e.response.text}")
+            st.stop()
+        except Exception as e:
+            st.error(f"Request failed: {e}")
+            st.stop()
+
+# Retrieve stored result
+result = st.session_state.get("analysis_result")
+
+# If no analysis has been run yet, show initial state and stop
+if result is None:
     st.info("👈 Pick or paste a claim case in the sidebar, then click **Analyze claim**.")
     st.stop()
-
-with st.spinner("Running the multi-agent pipeline..."):
-    try:
-        result = call_api(case_payload)
-    except requests.HTTPError as e:
-        st.error(f"API error: {e.response.status_code} - {e.response.text}")
-        st.stop()
-    except Exception as e:
-        st.error(f"Request failed: {e}")
-        st.stop()
 
 # ======================================================================= HEADLINE
 decision = result["decision"]
@@ -240,6 +304,17 @@ with tabs[1]:
     else:
         st.write("No category sub-limits were applicable to this claim.")
 
+def format_chunk_text(text: str) -> str:
+    """Cleans raw PDF text by preserving bullet points and adding readable line breaks."""
+    if not text:
+        return ""
+    # Ensure bullet points start on clean lines
+    text = text.replace("", "\n- ").replace("•", "\n- ")
+    # Ensure numbered list items start on new lines
+    import re
+    text = re.sub(r'(\b[i|v|x]+\b\))', r'\n  - \1', text) # format roman numerals (i), ii), etc.)
+    return text
+
 with tabs[2]:
     citations = result.get("citations") or []
     if citations:
@@ -261,14 +336,29 @@ with tabs[2]:
             }
             for c in citations
         ])
-        with st.expander("Inspect a cited policy chunk"):
-            chunk_id = st.selectbox("Chunk", sorted({c["chunk_id"] for c in citations}))
-            try:
-                chunk = requests.get(f"{API_URL}/policy/chunks/{chunk_id}", timeout=10).json()
-                st.markdown(f"**{chunk['section']} / {chunk.get('subsection') or ''}** (page {chunk['page_start']})")
-                st.text(chunk["text"])
-            except Exception as e:
-                st.error(f"Could not fetch chunk: {e}")
+        
+        with st.expander("Inspect a cited policy chunk", expanded=True):
+            chunk_id = st.selectbox(
+                "Chunk", 
+                sorted({c["chunk_id"] for c in citations}),
+                key="tab_citation_chunk_select"
+            )
+            if chunk_id:
+                try:
+                    chunk = requests.get(f"{API_URL}/policy/chunks/{chunk_id}", timeout=10).json()
+                    
+                    # Section Header
+                    sec = chunk.get("section", "")
+                    subsec = chunk.get("subsection") or ""
+                    page = chunk.get("page_start") or chunk.get("page", "N/A")
+                    st.markdown(f"#### 📄 {sec} {f'/ {subsec}' if subsec else ''} *(Page {page})*")
+                    
+                    # Formatted Readable Content Box
+                    formatted_text = format_chunk_text(chunk.get("text", ""))
+                    st.info(formatted_text)
+                    
+                except Exception as e:
+                    st.error(f"Could not fetch chunk: {e}")
     else:
         st.write("No citations returned.")
 
