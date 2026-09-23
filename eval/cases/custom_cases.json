@@ -1,0 +1,153 @@
+[
+  {
+    "case_id": "CUST-001",
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-09-01",
+    "sum_insured_inr": 500000,
+    "continuous_coverage_months": 32,
+    "prior_insurer_continuous_years": 0,
+    "patient": {"age": 30},
+    "hospital": {"name": "City Maternity Hospital", "network_provider": true},
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 96,
+      "diagnosis": "Pregnancy with caesarean delivery",
+      "procedure": "Caesarean section",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 20000, "doctor_fees": 40000, "medicines_diagnostics": 60000,
+      "pre_hospitalization": 0, "post_hospitalization": 0, "ambulance": 0
+    },
+    "documents": ["claim_form", "discharge_summary", "itemized_bill"],
+    "task": "Determine whether maternity/childbirth-related expenses are payable under this individual health policy."
+  },
+  {
+    "case_id": "CUST-002",
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2020-01-01",
+    "claim_date": "2026-06-15",
+    "sum_insured_inr": 500000,
+    "continuous_coverage_months": 77,
+    "prior_insurer_continuous_years": 0,
+    "patient": {"age": 55},
+    "hospital": {"name": "Metro Heart Centre", "network_provider": true},
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 96,
+      "diagnosis": "Pre-existing diabetes with complications",
+      "procedure": "Complication management",
+      "pre_existing": true,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 4000, "doctor_fees": 30000, "medicines_diagnostics": 60000,
+      "pre_hospitalization": 4000, "post_hospitalization": 5000, "ambulance": 0
+    },
+    "documents": ["claim_form", "discharge_summary", "itemized_bill", "prior_medical_records"],
+    "task": "Assess a pre-existing-disease claim where the 48-month waiting period has already elapsed."
+  },
+  {
+    "case_id": "CUST-003",
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-07-20",
+    "sum_insured_inr": 500000,
+    "continuous_coverage_months": 30,
+    "prior_insurer_continuous_years": 0,
+    "patient": {"age": 27},
+    "hospital": {"name": "Riverside Hospital", "network_provider": true},
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 48,
+      "diagnosis": "Injury sustained while intoxicated with alcohol",
+      "procedure": "Fracture management",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 8000, "doctor_fees": 15000, "medicines_diagnostics": 20000,
+      "pre_hospitalization": 0, "post_hospitalization": 0, "ambulance": 1000
+    },
+    "documents": ["claim_form", "discharge_summary", "itemized_bill", "police_report"],
+    "task": "Determine whether an injury sustained under the influence of alcohol is excluded."
+  },
+  {
+    "case_id": "CUST-004",
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-08-01",
+    "sum_insured_inr": 300000,
+    "continuous_coverage_months": 31,
+    "prior_insurer_continuous_years": 0,
+    "patient": {"age": 60},
+    "hospital": {"name": "Sunrise Multispeciality", "network_provider": true},
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 96,
+      "diagnosis": "Community acquired pneumonia",
+      "procedure": "Hospital treatment",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 45000, "doctor_fees": 20000, "medicines_diagnostics": 50000,
+      "pre_hospitalization": 3000, "post_hospitalization": 4000, "ambulance": 2000
+    },
+    "documents": ["claim_form", "discharge_summary", "itemized_bill"],
+    "task": "Assess admissibility and apply room-rent and ambulance sub-limits on a smaller sum-insured policy."
+  },
+  {
+    "case_id": "CUST-005",
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2026-08-01",
+    "claim_date": "2026-08-25",
+    "sum_insured_inr": 500000,
+    "continuous_coverage_months": 0,
+    "prior_insurer_continuous_years": 0,
+    "patient": {"age": 33},
+    "hospital": {"name": "Highway Trauma Centre", "network_provider": true},
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 48,
+      "diagnosis": "Road traffic accident with fracture",
+      "procedure": "Fracture fixation surgery",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 12000, "doctor_fees": 25000, "medicines_diagnostics": 40000,
+      "pre_hospitalization": 0, "post_hospitalization": 0, "ambulance": 1500
+    },
+    "documents": ["claim_form", "discharge_summary", "itemized_bill", "fir_copy"],
+    "task": "Determine whether an accidental injury claim within the first 24 days of the policy is barred by the initial 30-day waiting period."
+  },
+  {
+    "case_id": "CUST-006",
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2025-01-01",
+    "claim_date": "2026-03-01",
+    "sum_insured_inr": 500000,
+    "continuous_coverage_months": 14,
+    "prior_insurer_continuous_years": 0,
+    "patient": {"age": 48},
+    "hospital": {"name": "Regional Care Hospital", "network_provider": false},
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 96,
+      "diagnosis": "Acute pancreatitis",
+      "procedure": "Hospital treatment",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 18000, "doctor_fees": 22000, "medicines_diagnostics": 55000,
+      "pre_hospitalization": 0, "post_hospitalization": 0, "ambulance": 0
+    },
+    "documents": ["claim_form", "itemized_bill"],
+    "task": "Assess a non-network hospitalization where no evidence about the facility's registration status was supplied at all.",
+    "evidence_context": {}
+  }
+]
