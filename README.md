@@ -297,10 +297,4 @@ section for what changed)
   agents without meaningful separation" — each of the five agents here has
   a genuinely distinct input/output type and responsibility.
 
-## Deployment
 
-- **Backend:** `Dockerfile.backend` — deploy to Render/HF Spaces/Fly.io.
-  Set `ANTHROPIC_API_KEY` (or leave unset for rule-only mode) as an
-  environment variable, never in code.
-- **Frontend:** `Dockerfile.frontend`, or Streamlit Community Cloud;
-  point `CLAIM_API_URL` at the deployed backend.
