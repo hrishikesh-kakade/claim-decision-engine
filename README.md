@@ -8,6 +8,7 @@
 ## 📚 Architecture & Design
 For details on agent boundaries, state flow, hybrid RAG strategy, and architectural trade-offs, see [ARCHITECTURE.md](./ARCHITECTURE.md).
 
+---
 
 A small, evidence-grounded claims-decision system for the USGIC "CSC –
 Individual Health Insurance" policy (UNIHLIP18004V011718). Given a claim
@@ -387,9 +388,65 @@ correctness is enforced structurally, not just measured.
   a genuinely distinct input/output type and responsibility.
 
 
-## Deployment Setup & Architecture Options
+## Deployment Architecture & Setup
 
-Render / Railway (Backend) + Streamlit Community Cloud (Frontend)
-1. **Push to GitHub:** Repository pushed to `hrishikesh-kakade/claim-decision-engine`.
-2. **Backend API:** Deployed on Railway using `Dockerfile.backend`. Environment variables (`GROQ_API_KEY`, `GROQ_MODEL`) are securely configured via the Railway service settings panel—never committed to source control.
-3. **Frontend UI:** Connected directly to the main branch on Streamlit Community Cloud with `frontend/streamlit_app.py` set as the main entry point, and `CLAIM_API_URL` configured under **Advanced Settings → Secrets**.
+                      ┌────────────────────────┐
+                      │   Streamlit Cloud      │
+                      │   (Frontend UI)        │
+                      └───────────┬────────────┘
+                                  │
+                     REST API Requests (HTTPS)
+                     `POST /analyze`
+                     `GET /policy/chunks/{id}`
+                                  │
+                                  ▼
+                      ┌────────────────────────┐
+                      │   Railway Container    │
+                      │   (FastAPI Backend)    │
+                      └───────────┬────────────┘
+                                  │
+                    ┌─────────────┴─────────────┐
+                    ▼                           ▼
+        ┌───────────────────────┐   ┌───────────────────────┐
+        │ Persistent Vector DB  │   │   Groq LLM Service    │
+        │  (Chroma / BM25 RAG)  │   │ (Narration Layer Only)│
+        └───────────────────────┘   └───────────────────────┘
+
+---
+
+### Production Deployment Pipeline
+
+#### 1. Repository Source Control
+* **GitHub Repository:** [`hrishikesh-kakade/claim-decision-engine`](https://github.com/hrishikesh-kakade/claim-decision-engine)
+* Multi-stage build support with separate container instructions for backend services (`Dockerfile.backend`) and frontend apps (`Dockerfile.frontend`).
+
+---
+
+#### 2. Backend Engine Deployment (Railway)
+* **Hosting Platform:** Railway (Docker Container Runtime)
+* **Entry Specification:** Built via `Dockerfile.backend` exposing port `8000`.
+* **Index Initialization:** The Docker build phase automatically builds and mounts the Chroma persistent vector database alongside the sparse BM25 index on startup.
+* **Environment & Security Management:** Sensitive credentials are securely injected via Railway's Service Environment Settings:
+  * `GROQ_API_KEY`: API key for Groq LLM inference.
+  * `GROQ_MODEL`: Specified model (e.g., `llama-3.3-70b`).
+  * `PORT`: Dynamically bound by the container orchestrator.
+
+---
+
+#### 3. Reviewer Dashboard Deployment (Streamlit Community Cloud)
+* **Hosting Platform:** Streamlit Community Cloud
+* **Entry Point:** `frontend/streamlit_app.py`
+* **Configuration & Secret Injection:**
+  * Configured via **App Settings → Secrets** to securely connect to the Railway instance:
+    ```toml
+    CLAIM_API_URL = "[https://claim-decision-engine-production-8083.up.railway.app](https://claim-decision-engine-production-8083.up.railway.app)"
+    ```
+* **Continuous Deployment:** Configured with GitHub webhooks for automatic re-deployment upon pushes to the `main` branch.
+
+---
+
+### Alternative Deployment Topology (Containerized Dual-Space)
+
+For environments requiring single-provider isolation or containerized edge hosting (e.g., Hugging Face Spaces):
+* **Backend Container Space:** Deployed using `Dockerfile.backend` with dynamic `$PORT` shell execution (`CMD uvicorn backend.main:app --host 0.0.0.0 --port $PORT`).
+* **Frontend Container Space:** Deployed using `Dockerfile.frontend` configured with environment variable binding `CLAIM_API_URL` pointing to the backend Space's public URL.
