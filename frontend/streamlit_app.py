@@ -22,7 +22,10 @@ from pathlib import Path
 import requests
 import streamlit as st
 
-API_URL = os.getenv("CLAIM_API_URL", "http://localhost:8000")
+API_URL = st.secrets.get(
+    "CLAIM_API_URL", 
+    os.getenv("CLAIM_API_URL", "https://claim-decision-engine-production-8083.up.railway.app")
+)
 ROOT = Path(__file__).resolve().parent.parent
 
 st.set_page_config(page_title="Claim Decision Engine", layout="wide")
