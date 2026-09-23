@@ -5,6 +5,10 @@
 - **Live Streamlit Frontend (Reviewer UI):** [https://claim-decision-engine-frontend.streamlit.app/](https://claim-decision-engine-frontend.streamlit.app/)
   
 
+## 📚 Architecture & Design
+For details on agent boundaries, state flow, hybrid RAG strategy, and architectural trade-offs, see [ARCHITECTURE.md](./ARCHITECTURE.md).
+
+
 A small, evidence-grounded claims-decision system for the USGIC "CSC –
 Individual Health Insurance" policy (UNIHLIP18004V011718). Given a claim
 case, it returns a structured decision (`ADMISSIBLE`,
