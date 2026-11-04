@@ -1,0 +1,788 @@
+[
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 500000,
+    "basic_sum_insured_inr": 500000,
+    "sum_assured_inr": 500000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Acute bacterial infection",
+      "procedure": "Inpatient medical management",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 3000,
+      "icu": 0,
+      "doctor_fees": 20000,
+      "medicines_diagnostics": 50000,
+      "pre_hospitalization": 0,
+      "post_hospitalization": 0,
+      "ambulance": 0
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-ADM-001"
+  },
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 500000,
+    "basic_sum_insured_inr": 500000,
+    "sum_assured_inr": 500000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Acute respiratory infection",
+      "procedure": "Oxygen therapy and inpatient care",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 2500,
+      "icu": 8000,
+      "doctor_fees": 30000,
+      "medicines_diagnostics": 60000,
+      "pre_hospitalization": 0,
+      "post_hospitalization": 0,
+      "ambulance": 0
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-ADM-002"
+  },
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 500000,
+    "basic_sum_insured_inr": 500000,
+    "sum_assured_inr": 500000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Acute gallbladder inflammation",
+      "procedure": "Laparoscopic cholecystectomy",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 4000,
+      "icu": 0,
+      "doctor_fees": 100000,
+      "medicines_diagnostics": 100000,
+      "pre_hospitalization": 0,
+      "post_hospitalization": 0,
+      "ambulance": 0
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-ADM-003"
+  },
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 500000,
+    "basic_sum_insured_inr": 500000,
+    "sum_assured_inr": 500000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Acute dehydration",
+      "procedure": "Intravenous fluid therapy",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 2000,
+      "icu": 0,
+      "doctor_fees": 15000,
+      "medicines_diagnostics": 30000,
+      "pre_hospitalization": 0,
+      "post_hospitalization": 0,
+      "ambulance": 900
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-ADM-004"
+  },
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 500000,
+    "basic_sum_insured_inr": 500000,
+    "sum_assured_inr": 500000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Community acquired pneumonia",
+      "procedure": "Inpatient medical management",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 4500,
+      "icu": 9000,
+      "doctor_fees": 120000,
+      "medicines_diagnostics": 190000,
+      "pre_hospitalization": 0,
+      "post_hospitalization": 0,
+      "ambulance": 800
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-ADM-005"
+  },
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 300000,
+    "basic_sum_insured_inr": 300000,
+    "sum_assured_inr": 300000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Acute intestinal infection",
+      "procedure": "Inpatient medical management",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 2500,
+      "icu": 0,
+      "doctor_fees": 70000,
+      "medicines_diagnostics": 100000,
+      "pre_hospitalization": 0,
+      "post_hospitalization": 0,
+      "ambulance": 0
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-ADM-006"
+  },
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 500000,
+    "basic_sum_insured_inr": 500000,
+    "sum_assured_inr": 500000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Acute respiratory infection",
+      "procedure": "Inpatient medical management",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 9000,
+      "icu": 0,
+      "doctor_fees": 20000,
+      "medicines_diagnostics": 50000,
+      "pre_hospitalization": 0,
+      "post_hospitalization": 0,
+      "ambulance": 0
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-LIM-001"
+  },
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 500000,
+    "basic_sum_insured_inr": 500000,
+    "sum_assured_inr": 500000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Severe bacterial pneumonia",
+      "procedure": "Intensive care treatment",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 3000,
+      "icu": 18000,
+      "doctor_fees": 30000,
+      "medicines_diagnostics": 60000,
+      "pre_hospitalization": 0,
+      "post_hospitalization": 0,
+      "ambulance": 0
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-LIM-002"
+  },
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 500000,
+    "basic_sum_insured_inr": 500000,
+    "sum_assured_inr": 500000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Acute abdominal infection",
+      "procedure": "Emergency surgical treatment",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 3000,
+      "icu": 0,
+      "doctor_fees": 150000,
+      "medicines_diagnostics": 80000,
+      "pre_hospitalization": 0,
+      "post_hospitalization": 0,
+      "ambulance": 0
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-LIM-003"
+  },
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 500000,
+    "basic_sum_insured_inr": 500000,
+    "sum_assured_inr": 500000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Acute kidney infection",
+      "procedure": "Inpatient medical management",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 3000,
+      "icu": 0,
+      "doctor_fees": 20000,
+      "medicines_diagnostics": 250000,
+      "pre_hospitalization": 0,
+      "post_hospitalization": 0,
+      "ambulance": 0
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-LIM-004"
+  },
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 500000,
+    "basic_sum_insured_inr": 500000,
+    "sum_assured_inr": 500000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Acute injury following a fall",
+      "procedure": "Inpatient trauma treatment",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 3000,
+      "icu": 0,
+      "doctor_fees": 20000,
+      "medicines_diagnostics": 50000,
+      "pre_hospitalization": 0,
+      "post_hospitalization": 0,
+      "ambulance": 1500
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-LIM-005"
+  },
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 500000,
+    "basic_sum_insured_inr": 500000,
+    "sum_assured_inr": 500000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Acute abdominal infection",
+      "procedure": "Inpatient surgical treatment",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 8000,
+      "icu": 0,
+      "doctor_fees": 150000,
+      "medicines_diagnostics": 80000,
+      "pre_hospitalization": 0,
+      "post_hospitalization": 0,
+      "ambulance": 0
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-LIM-006"
+  },
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 500000,
+    "basic_sum_insured_inr": 500000,
+    "sum_assured_inr": 500000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Acute bacterial infection",
+      "procedure": "Inpatient medical management",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 3000,
+      "icu": 0,
+      "doctor_fees": 20000,
+      "medicines_diagnostics": 50000,
+      "pre_hospitalization": 5000,
+      "post_hospitalization": 0,
+      "ambulance": 0
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-PAR-001",
+    "expense_timing": {
+      "pre_hospitalization_days_before_admission": 45,
+      "post_hospitalization_days_after_discharge": 20,
+      "same_condition_confirmed": true
+    }
+  },
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 500000,
+    "basic_sum_insured_inr": 500000,
+    "sum_assured_inr": 500000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Acute respiratory infection",
+      "procedure": "Inpatient medical management",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 3000,
+      "icu": 0,
+      "doctor_fees": 25000,
+      "medicines_diagnostics": 60000,
+      "pre_hospitalization": 0,
+      "post_hospitalization": 7000,
+      "ambulance": 0
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-PAR-002",
+    "expense_timing": {
+      "pre_hospitalization_days_before_admission": 10,
+      "post_hospitalization_days_after_discharge": 75,
+      "same_condition_confirmed": true
+    }
+  },
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 500000,
+    "basic_sum_insured_inr": 500000,
+    "sum_assured_inr": 500000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Acute gastrointestinal infection",
+      "procedure": "Inpatient medical management",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 2500,
+      "icu": 0,
+      "doctor_fees": 18000,
+      "medicines_diagnostics": 45000,
+      "pre_hospitalization": 4500,
+      "post_hospitalization": 2500,
+      "ambulance": 0
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-PAR-003",
+    "expense_timing": {
+      "pre_hospitalization_days_before_admission": 35,
+      "post_hospitalization_days_after_discharge": 20,
+      "same_condition_confirmed": true
+    }
+  },
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 500000,
+    "basic_sum_insured_inr": 500000,
+    "sum_assured_inr": 500000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Acute urinary infection",
+      "procedure": "Inpatient medical management",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 2500,
+      "icu": 0,
+      "doctor_fees": 18000,
+      "medicines_diagnostics": 45000,
+      "pre_hospitalization": 3000,
+      "post_hospitalization": 5000,
+      "ambulance": 0
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-PAR-004",
+    "expense_timing": {
+      "pre_hospitalization_days_before_admission": 20,
+      "post_hospitalization_days_after_discharge": 90,
+      "same_condition_confirmed": true
+    }
+  },
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 500000,
+    "basic_sum_insured_inr": 500000,
+    "sum_assured_inr": 500000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Acute bacterial infection",
+      "procedure": "Inpatient medical management",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 3000,
+      "icu": 0,
+      "doctor_fees": 22000,
+      "medicines_diagnostics": 55000,
+      "pre_hospitalization": 4000,
+      "post_hospitalization": 6000,
+      "ambulance": 0
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-PAR-005",
+    "expense_timing": {
+      "pre_hospitalization_days_before_admission": 45,
+      "post_hospitalization_days_after_discharge": 75,
+      "same_condition_confirmed": true
+    }
+  },
+  {
+    "policy_id": "USGIC-CSC-2017-2018",
+    "policy_start_date": "2024-01-01",
+    "claim_date": "2026-10-15",
+    "sum_insured_inr": 500000,
+    "basic_sum_insured_inr": 500000,
+    "sum_assured_inr": 500000,
+    "continuous_coverage_months": 33,
+    "prior_insurer_continuous_years": 0,
+    "patient": {
+      "age": 42
+    },
+    "hospital": {
+      "name": "Benchmark General Hospital",
+      "network_provider": true
+    },
+    "treatment": {
+      "type": "inpatient",
+      "admission_hours": 72,
+      "diagnosis": "Acute respiratory infection",
+      "procedure": "Inpatient medical management",
+      "pre_existing": false,
+      "experimental": false
+    },
+    "expenses_inr": {
+      "room": 3500,
+      "icu": 0,
+      "doctor_fees": 30000,
+      "medicines_diagnostics": 70000,
+      "pre_hospitalization": 2500,
+      "post_hospitalization": 1000,
+      "ambulance": 0
+    },
+    "documents": [
+      "claim_form",
+      "discharge_summary",
+      "itemized_bill",
+      "doctor_prescription"
+    ],
+    "task": "Assess the claim under the supplied policy, apply relevant monetary limits, and explain the decision.",
+    "case_id": "NEW-PAR-006",
+    "expense_timing": {
+      "pre_hospitalization_days_before_admission": 31,
+      "post_hospitalization_days_after_discharge": 10,
+      "same_condition_confirmed": true
+    }
+  }
+]

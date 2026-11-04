@@ -1,9 +1,19 @@
+@'
 __pycache__/
-*.pyc
+*.py[cod]
+*.bak
+
 .env
+.env.*
+!.env.example
+
 .venv/
 venv/
-eval/results/*.json
-eval/results/*.md
+
 .streamlit/
 data/chroma/
+
+eval/results/*
+!eval/results/METRICS_REPORT.md
+!eval/results/RERANK_DIAGNOSTICS.md
+'@ | Set-Content .gitignore

@@ -1,0 +1,484 @@
+{
+  "_method": "Development retrieval gold expansion. These 40 queries are intended for retrieval iteration and may be used for tuning. Labels are based on the supplied policy chunks and should be manually reviewed before external reporting.",
+  "queries": [
+    {
+      "id": "D01",
+      "group": "pipeline",
+      "query": "What expenses are included in normal room rent?",
+      "relevant": [
+        "DEFINITIONS-043",
+        "SCOPE_OF_COVER-001"
+      ],
+      "evidence_terms": [
+        "occupancy of a bed",
+        "associated Medical Expenses",
+        "Normal Room expenses: 1.0% of Basic Sum Insured"
+      ]
+    },
+    {
+      "id": "D02",
+      "group": "natural",
+      "query": "Does the room rent limit include the medical expenses linked to the room?",
+      "relevant": [
+        "DEFINITIONS-043",
+        "SCOPE_OF_COVER-001"
+      ],
+      "evidence_terms": [
+        "shall include associated Medical Expenses",
+        "Normal Room expenses: 1.0% of Basic Sum Insured"
+      ]
+    },
+    {
+      "id": "D03",
+      "group": "pipeline",
+      "query": "What is the daily cap for intensive care or therapeutic unit expenses?",
+      "relevant": [
+        "SCOPE_OF_COVER-001"
+      ],
+      "evidence_terms": [
+        "2% of Basic Sum Insured"
+      ]
+    },
+    {
+      "id": "D04",
+      "group": "natural",
+      "query": "How much can the insurer pay per day for ICU charges?",
+      "relevant": [
+        "SCOPE_OF_COVER-001"
+      ],
+      "evidence_terms": [
+        "Sub limit per day for Intensive Care/ Therapeutic Unit expenses: 2% of Basic Sum Insured"
+      ]
+    },
+    {
+      "id": "D05",
+      "group": "pipeline",
+      "query": "Are hospital registration charges subject to a percentage sub-limit?",
+      "relevant": [
+        "SCOPE_OF_COVER-001"
+      ],
+      "evidence_terms": [
+        "Registration Charges of Hospital/ Nursing Home : Actuals"
+      ]
+    },
+    {
+      "id": "D06",
+      "group": "natural",
+      "query": "Will the policy reimburse hospital registration fees in full or apply a cap?",
+      "relevant": [
+        "SCOPE_OF_COVER-001"
+      ],
+      "evidence_terms": [
+        "Registration Charges of Hospital/ Nursing Home : Actuals"
+      ]
+    },
+    {
+      "id": "D07",
+      "group": "pipeline",
+      "query": "What percentage limit applies to anesthetist and surgeon fees?",
+      "relevant": [
+        "SCOPE_OF_COVER-002"
+      ],
+      "evidence_terms": [
+        "25% of Sum Assured"
+      ]
+    },
+    {
+      "id": "D08",
+      "group": "natural",
+      "query": "Are consultant and surgeon charges covered up to the full bill amount?",
+      "relevant": [
+        "SCOPE_OF_COVER-002"
+      ],
+      "evidence_terms": [
+        "Consultant fees, Surgeons fees",
+        "25% of Sum Assured"
+      ]
+    },
+    {
+      "id": "D09",
+      "group": "pipeline",
+      "query": "Which treatment expenses fall under the 40 percent sub-limit?",
+      "relevant": [
+        "SCOPE_OF_COVER-003"
+      ],
+      "evidence_terms": [
+        "Medicines and Drugs",
+        "Diagnostic Materials and X-ray",
+        "subject to a limit of 40% Sum Insured"
+      ]
+    },
+    {
+      "id": "D10",
+      "group": "natural",
+      "query": "Is the cost of a pacemaker or artificial limb included in the policy's medical expense cap?",
+      "relevant": [
+        "SCOPE_OF_COVER-003"
+      ],
+      "evidence_terms": [
+        "Cost of Pacemaker, Artificial Limbs",
+        "subject to a limit of 40% Sum Insured"
+      ]
+    },
+    {
+      "id": "D11",
+      "group": "pipeline",
+      "query": "When are vitamins and tonics reimbursable?",
+      "relevant": [
+        "SCOPE_OF_COVER-003"
+      ],
+      "evidence_terms": [
+        "Vitamins and Tonics only if forming part of treatment"
+      ]
+    },
+    {
+      "id": "D12",
+      "group": "natural",
+      "query": "Can I claim supplements prescribed during treatment?",
+      "relevant": [
+        "SCOPE_OF_COVER-003"
+      ],
+      "evidence_terms": [
+        "Expenses on Vitamins and Tonics only if forming part of treatment"
+      ]
+    },
+    {
+      "id": "D13",
+      "group": "pipeline",
+      "query": "What is the aggregate sub-limit for domiciliary hospitalization?",
+      "relevant": [
+        "SCOPE_OF_COVER-003"
+      ],
+      "evidence_terms": [
+        "maximum aggregate sub-limit of 20% of the Basic Sum Insured"
+      ]
+    },
+    {
+      "id": "D14",
+      "group": "natural",
+      "query": "Does the domiciliary cap apply per day or to the whole claim?",
+      "relevant": [
+        "SCOPE_OF_COVER-003"
+      ],
+      "evidence_terms": [
+        "maximum aggregate sub-limit"
+      ]
+    },
+    {
+      "id": "D15",
+      "group": "pipeline",
+      "query": "What is the maximum package-charge amount payable for one illness?",
+      "relevant": [
+        "DEFINITIONS-003",
+        "SCOPE_OF_COVER-003"
+      ],
+      "evidence_terms": [
+        "relapse within 45 days",
+        "Any One Illness",
+        "75% of the Sum Insured"
+      ]
+    },
+    {
+      "id": "D16",
+      "group": "natural",
+      "query": "If the same illness comes back within 45 days, is it treated as one illness?",
+      "relevant": [
+        "DEFINITIONS-003"
+      ],
+      "evidence_terms": [
+        "relapse within 45 days"
+      ]
+    },
+    {
+      "id": "D17",
+      "group": "pipeline",
+      "query": "Does the policy cover day-care procedures completed in less than 24 hours?",
+      "relevant": [
+        "DEFINITIONS-013",
+        "SCOPE_OF_COVER-003"
+      ],
+      "evidence_terms": [
+        "undertaken under General or Local Anesthesia",
+        "in less than 24 hrs",
+        "would have otherwise required a hospitalization of more than 24 hours"
+      ]
+    },
+    {
+      "id": "D18",
+      "group": "natural",
+      "query": "Can a procedure be covered even if I leave hospital on the same day?",
+      "relevant": [
+        "DEFINITIONS-013",
+        "SCOPE_OF_COVER-003"
+      ],
+      "evidence_terms": [
+        "in less than 24 hrs",
+        "minimum stay of 24 hours can be waived"
+      ]
+    },
+    {
+      "id": "D19",
+      "group": "pipeline",
+      "query": "What conditions make a treatment center qualify as a day care centre?",
+      "relevant": [
+        "DEFINITIONS-013"
+      ],
+      "evidence_terms": [
+        "qualified nursing staff",
+        "qualified medical practitioner/s in charge",
+        "fully equipped operation theatre"
+      ]
+    },
+    {
+      "id": "D20",
+      "group": "natural",
+      "query": "Does an ordinary outpatient consultation count as day-care treatment?",
+      "relevant": [
+        "DEFINITIONS-013",
+        "DEFINITIONS-033"
+      ],
+      "evidence_terms": [
+        "Treatment normally taken on an out-patient basis is not included",
+        "The Insured is not admitted as a day care or in-patient"
+      ]
+    },
+    {
+      "id": "D21",
+      "group": "pipeline",
+      "query": "What is the policy definition of domiciliary treatment?",
+      "relevant": [
+        "DEFINITIONS-015"
+      ],
+      "evidence_terms": [
+        "confined at home",
+        "not in a condition to be removed to a Hospital",
+        "non-availability of room in a Hospital"
+      ]
+    },
+    {
+      "id": "D22",
+      "group": "natural",
+      "query": "Can treatment at home qualify if no hospital bed is available?",
+      "relevant": [
+        "DEFINITIONS-015"
+      ],
+      "evidence_terms": [
+        "non-availability of room in a Hospital"
+      ]
+    },
+    {
+      "id": "D23",
+      "group": "pipeline",
+      "query": "How many hours of admission are normally required for hospitalization?",
+      "relevant": [
+        "DEFINITIONS-020"
+      ],
+      "evidence_terms": [
+        "minimum period of 24 In-patient Care"
+      ]
+    },
+    {
+      "id": "D24",
+      "group": "natural",
+      "query": "Does a hospital stay shorter than 24 hours ever qualify?",
+      "relevant": [
+        "DEFINITIONS-020",
+        "DEFINITIONS-013"
+      ],
+      "evidence_terms": [
+        "except for specified procedures/ treatments",
+        "less than 24 consecutive hours"
+      ]
+    },
+    {
+      "id": "D25",
+      "group": "pipeline",
+      "query": "What minimum bed capacity must a hospital have in a town with population below ten lakh?",
+      "relevant": [
+        "DEFINITIONS-021"
+      ],
+      "evidence_terms": [
+        "at least 10 in-patient beds in towns having a population of less than 10,00,000"
+      ]
+    },
+    {
+      "id": "D26",
+      "group": "natural",
+      "query": "Would a small facility with fewer than ten beds meet the policy's hospital definition in a smaller town?",
+      "relevant": [
+        "DEFINITIONS-021"
+      ],
+      "evidence_terms": [
+        "at least 10 in-patient beds in towns having a population of less than 10,00,000"
+      ]
+    },
+    {
+      "id": "D27",
+      "group": "pipeline",
+      "query": "What does the policy mean by medically necessary treatment?",
+      "relevant": [
+        "DEFINITIONS-030"
+      ],
+      "evidence_terms": [
+        "required for the medical management",
+        "must not exceed the level of care necessary",
+        "must have been prescribed by a Medical Practitioner"
+      ]
+    },
+    {
+      "id": "D28",
+      "group": "natural",
+      "query": "Can the insurer question tests or treatment that were not prescribed by a doctor?",
+      "relevant": [
+        "DEFINITIONS-030"
+      ],
+      "evidence_terms": [
+        "must have been prescribed by a Medical Practitioner"
+      ]
+    },
+    {
+      "id": "D29",
+      "group": "pipeline",
+      "query": "What is meant by reasonable and customary medical charges?",
+      "relevant": [
+        "DEFINITIONS-041"
+      ],
+      "evidence_terms": [
+        "standard charges for the specific provider",
+        "prevailing charges in the geographical area"
+      ]
+    },
+    {
+      "id": "D30",
+      "group": "natural",
+      "query": "Can unusually high hospital charges be reduced to the usual local rate?",
+      "relevant": [
+        "DEFINITIONS-041"
+      ],
+      "evidence_terms": [
+        "consistent with the prevailing charges in the geographical area"
+      ]
+    },
+    {
+      "id": "D31",
+      "group": "pipeline",
+      "query": "How long before admission can medical expenses be claimed?",
+      "relevant": [
+        "EXCLUSIONS-002",
+        "DEFINITIONS-035"
+      ],
+      "evidence_terms": [
+        "same condition for which the Insured",
+        "maximum of 30 days immediately preceding Hospitalisation"
+      ]
+    },
+    {
+      "id": "D32",
+      "group": "natural",
+      "query": "Are follow-up bills after discharge covered, and for how long?",
+      "relevant": [
+        "EXCLUSIONS-002",
+        "DEFINITIONS-038"
+      ],
+      "evidence_terms": [
+        "same condition for which the Insured",
+        "maximum of 60 days immediately following Hospitalisation"
+      ]
+    },
+    {
+      "id": "D33",
+      "group": "pipeline",
+      "query": "What is the deadline for the insurer to settle or reject a claim after receiving the last required document?",
+      "relevant": [
+        "CLAIMS_PROCEDURE-001"
+      ],
+      "evidence_terms": [
+        "within thirty days",
+        "receipt of the last necessary claim document"
+      ]
+    },
+    {
+      "id": "D34",
+      "group": "natural",
+      "query": "Once my claim is approved, how soon should the payment be made?",
+      "relevant": [
+        "CLAIMS_PROCEDURE-003"
+      ],
+      "evidence_terms": [
+        "paid by Us within 7 working days"
+      ]
+    },
+    {
+      "id": "D35",
+      "group": "pipeline",
+      "query": "Does the policy provide interest if an accepted claim payment is delayed?",
+      "relevant": [
+        "CLAIMS_PROCEDURE-003"
+      ],
+      "evidence_terms": [
+        "interest at a rate which is 2% above bank rate"
+      ]
+    },
+    {
+      "id": "D36",
+      "group": "natural",
+      "query": "Can the insurer excuse late claim notification if the delay was outside my control?",
+      "relevant": [
+        "CLAIMS_PROCEDURE-004"
+      ],
+      "evidence_terms": [
+        "condone delay on merit",
+        "beyond Your control"
+      ]
+    },
+    {
+      "id": "D37",
+      "group": "pipeline",
+      "query": "What happens when the sum insured for a policy section has been fully used?",
+      "relevant": [
+        "CLAIMS_PROCEDURE-002"
+      ],
+      "evidence_terms": [
+        "once the Sum Insured (Maximum Limit of Indemnity)",
+        "is exhausted"
+      ]
+    },
+    {
+      "id": "D38",
+      "group": "natural",
+      "query": "Can I still receive payment from this policy after that section's insurance limit is exhausted?",
+      "relevant": [
+        "CLAIMS_PROCEDURE-002"
+      ],
+      "evidence_terms": [
+        "We shall have no liability under this Policy",
+        "is exhausted by You or Your Insured Family Member"
+      ]
+    },
+    {
+      "id": "D39",
+      "group": "pipeline",
+      "query": "What is the daily hospital allowance and what is its maximum total amount?",
+      "relevant": [
+        "EXCLUSIONS-002"
+      ],
+      "evidence_terms": [
+        "0.1% of the Basic Sum Insured or Rs. 250/- per day whichever is less",
+        "limited to Rs 2500/-"
+      ]
+    },
+    {
+      "id": "D40",
+      "group": "natural",
+      "query": "If I have two health policies, can both insurers pay the same hospitalization bill?",
+      "relevant": [
+        "STANDARD_TERMS-019",
+        "STANDARD_TERMS-020"
+      ],
+      "evidence_terms": [
+        "proportionate share of the loss",
+        "You may choose to get the settlement of claim from Us"
+      ]
+    }
+  ]
+}

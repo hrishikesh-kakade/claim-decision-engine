@@ -36,7 +36,9 @@ class Treatment(BaseModel):
 
 class Expenses(BaseModel):
     model_config = ConfigDict(extra="allow")
+
     room: float = 0
+    icu: float = 0
     doctor_fees: float = 0
     medicines_diagnostics: float = 0
     pre_hospitalization: float = 0
@@ -47,9 +49,15 @@ class Expenses(BaseModel):
     def total(self) -> float:
         return sum(
             v for v in (
-                self.room, self.doctor_fees, self.medicines_diagnostics,
-                self.pre_hospitalization, self.post_hospitalization, self.ambulance,
-            ) if isinstance(v, (int, float))
+                self.room,
+                self.icu,
+                self.doctor_fees,
+                self.medicines_diagnostics,
+                self.pre_hospitalization,
+                self.post_hospitalization,
+                self.ambulance,
+            )
+            if isinstance(v, (int, float))
         )
 
 
@@ -62,6 +70,8 @@ class ClaimCase(BaseModel):
     policy_start_date: str
     claim_date: str
     sum_insured_inr: float
+    basic_sum_insured_inr: Optional[float] = None
+    sum_assured_inr: Optional[float] = None
     continuous_coverage_months: Optional[float] = 0
     prior_insurer_continuous_years: Optional[float] = 0
     patient: Patient = Field(default_factory=Patient)

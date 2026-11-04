@@ -83,8 +83,15 @@ def decide(assessment: CoverageAssessment, total_claimed: float) -> DecisionResp
         confidence = 0.85
         payable = total_payable_from_limits
         decision_reasons = [
-            f"{li['limit_name']}: only INR {li['payable_inr']:,.0f} of the INR {li['claimed_inr']:,.0f} claimed "
-            f"is payable" + (f" (capped at {li['cap_pct_of_sum_insured']*100:.1f}% of Sum Insured)" if li.get("cap_pct_of_sum_insured") is not None else " (outside the covered window)")
+            (
+                f"{li['limit_name']}: only INR {li['payable_inr']:,.0f} "
+                f"of the INR {li['claimed_inr']:,.0f} claimed is payable"
+                + (
+                    f" (capped at {li['cap_pct']:.1%} of {li['cap_basis']})"
+                    if li.get("cap_pct") is not None and li.get("cap_basis")
+                    else " (outside the covered window)"
+                )
+            )
             for li in deducted_limits
         ]
     else:

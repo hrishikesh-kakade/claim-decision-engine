@@ -1,0 +1,244 @@
+{
+  "_method": "Held-out retrieval test set. Do not use these 20 queries or their labels to tune retrieval, prompts, chunking, or reranking. Evaluate only after the development configuration is frozen. Labels are based on the supplied policy chunks and should be independently reviewed before external reporting.",
+  "queries": [
+    {
+      "id": "T01",
+      "group": "natural",
+      "query": "I had a relapse 40 days after my last hospital consultation. Is it counted as the same illness?",
+      "relevant": [
+        "DEFINITIONS-003"
+      ],
+      "evidence_terms": [
+        "relapse within 45 days"
+      ]
+    },
+    {
+      "id": "T02",
+      "group": "pipeline",
+      "query": "Define a break in policy and state when it occurs.",
+      "relevant": [
+        "DEFINITIONS-005"
+      ],
+      "evidence_terms": [
+        "Break in Policy occurs at the end of the existing Policy term",
+        "premium Renewal date or within 30 days"
+      ]
+    },
+    {
+      "id": "T03",
+      "group": "natural",
+      "query": "If I pay the renewal premium during the grace period, are claims covered for the days when no premium was received?",
+      "relevant": [
+        "DEFINITIONS-019"
+      ],
+      "evidence_terms": [
+        "Coverage is not available for the period for which no premium is received"
+      ]
+    },
+    {
+      "id": "T04",
+      "group": "pipeline",
+      "query": "What is the policy's definition of a pre-existing disease?",
+      "relevant": [
+        "DEFINITIONS-036"
+      ],
+      "evidence_terms": [
+        "signs or symptoms, and / or were diagnosed"
+      ]
+    },
+    {
+      "id": "T05",
+      "group": "natural",
+      "query": "If I switch insurers, can I carry forward waiting-period credit for an existing condition?",
+      "relevant": [
+        "DEFINITIONS-037",
+        "STANDARD_TERMS-011"
+      ],
+      "evidence_terms": [
+        "credit gained for pre-existing conditions and time-bound exclusions",
+        "at least 45 days before the expiry"
+      ]
+    },
+    {
+      "id": "T06",
+      "group": "pipeline",
+      "query": "How early must the portability application and complete documents reach the new insurer?",
+      "relevant": [
+        "STANDARD_TERMS-011"
+      ],
+      "evidence_terms": [
+        "at least 45 days before the expiry of Your present period of insurance"
+      ]
+    },
+    {
+      "id": "T07",
+      "group": "natural",
+      "query": "Can I port my health policy in the middle of its term?",
+      "relevant": [
+        "STANDARD_TERMS-011"
+      ],
+      "evidence_terms": [
+        "available only at the time of Renewal"
+      ]
+    },
+    {
+      "id": "T08",
+      "group": "pipeline",
+      "query": "How much cumulative bonus is added for each claim-free year, and what is its maximum?",
+      "relevant": [
+        "EXCLUSIONS-003"
+      ],
+      "evidence_terms": [
+        "increased by 5% of the Basic Sum Insured at each renewal",
+        "subject to maximum of 30%"
+      ]
+    },
+    {
+      "id": "T09",
+      "group": "natural",
+      "query": "What happens to my accumulated bonus at the next renewal if I make a claim?",
+      "relevant": [
+        "EXCLUSIONS-003"
+      ],
+      "evidence_terms": [
+        "existing Cumulative Bonus will be reduced by 5% of Basic Sum Insured at the next renewal"
+      ]
+    },
+    {
+      "id": "T10",
+      "group": "pipeline",
+      "query": "Does the critical illness extension increase the limits for room rent, ambulance and domiciliary hospitalization?",
+      "relevant": [
+        "EXTENSIONS-001"
+      ],
+      "evidence_terms": [
+        "additional Sum Insured limit equal to Your Basic Sum Insured",
+        "will not qualify for Cumulative Bonus or for the limit for Room/board/nursing"
+      ]
+    },
+    {
+      "id": "T11",
+      "group": "natural",
+      "query": "What extra cover is available if I have paid the additional premium for critical illness?",
+      "relevant": [
+        "EXTENSIONS-001"
+      ],
+      "evidence_terms": [
+        "additional Sum Insured limit equal to Your Basic Sum Insured"
+      ]
+    },
+    {
+      "id": "T12",
+      "group": "pipeline",
+      "query": "What is the refund rule if the insurer cancels the policy for fraud or misrepresentation?",
+      "relevant": [
+        "STANDARD_TERMS-004"
+      ],
+      "evidence_terms": [
+        "15 days notice in writing",
+        "pro-rata refund of premium for the un-expired period"
+      ]
+    },
+    {
+      "id": "T13",
+      "group": "natural",
+      "query": "I want to cancel my policy after two months and have made no claim. How is the retained premium calculated?",
+      "relevant": [
+        "STANDARD_TERMS-005"
+      ],
+      "evidence_terms": [
+        "Upto 3 months 50% of annual premium",
+        "no claim has been preferred"
+      ]
+    },
+    {
+      "id": "T14",
+      "group": "pipeline",
+      "query": "What refund can I get during the free-look period if I have not made a claim?",
+      "relevant": [
+        "STANDARD_TERMS-014",
+        "STANDARD_TERMS-015",
+        "STANDARD_TERMS-016"
+      ],
+      "evidence_terms": [
+        "at least 15 days from the date of receipt",
+        "refund of the premium paid",
+        "medical examination and the stamp duty charges"
+      ]
+    },
+    {
+      "id": "T15",
+      "group": "natural",
+      "query": "Can the insurer refuse to renew my policy just because I made claims last year?",
+      "relevant": [
+        "STANDARD_TERMS-017"
+      ],
+      "evidence_terms": [
+        "shall not deny the Renewal of the Policy on the ground that You had made a claim"
+      ]
+    },
+    {
+      "id": "T16",
+      "group": "pipeline",
+      "query": "How long can renewal be delayed without treating the policy as broken, and is cover active during that delay?",
+      "relevant": [
+        "STANDARD_TERMS-017",
+        "DEFINITIONS-019"
+      ],
+      "evidence_terms": [
+        "condone a delay in Renewal up to 30 days",
+        "coverage shall not be available for such period"
+      ]
+    },
+    {
+      "id": "T17",
+      "group": "natural",
+      "query": "If the insurer withdraws this product, what alternative policy option must it provide?",
+      "relevant": [
+        "STANDARD_TERMS-018",
+        "STANDARD_TERMS-024"
+      ],
+      "evidence_terms": [
+        "option to buy a substitute health insurance Policy",
+        "option to migrate to a substitute product"
+      ]
+    },
+    {
+      "id": "T18",
+      "group": "pipeline",
+      "query": "What is the geographical coverage of the policy and in which currency are claims paid?",
+      "relevant": [
+        "STANDARD_TERMS-010"
+      ],
+      "evidence_terms": [
+        "geographical scope of this Policy will be India",
+        "Indian currency only"
+      ]
+    },
+    {
+      "id": "T19",
+      "group": "natural",
+      "query": "How do I notify the insurer about a claim, and what does the policy say about delay in notification?",
+      "relevant": [
+        "STANDARD_TERMS-001",
+        "STANDARD_TERMS-025"
+      ],
+      "evidence_terms": [
+        "Initial notification can be made by telephone",
+        "no delay should be allowed to occur in notifying a claim"
+      ]
+    },
+    {
+      "id": "T20",
+      "group": "pipeline",
+      "query": "If the insurer rejects my claim and I do not take legal action within a year, what happens?",
+      "relevant": [
+        "STANDARD_TERMS-009"
+      ],
+      "evidence_terms": [
+        "within 12 (twelve) months from date of disclaimer",
+        "deemed to have been abandoned"
+      ]
+    }
+  ]
+}

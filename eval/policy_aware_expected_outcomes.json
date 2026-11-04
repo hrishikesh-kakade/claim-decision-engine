@@ -1,0 +1,147 @@
+{
+  "_method": "Policy-aware expected outcomes. These expectations preserve the original policy interpretation while correcting unsupported monetary-basis assumptions. Room, ICU and domiciliary limits require Basic Sum Insured; doctor/surgeon/consultant fees require Sum Assured; other similar expenses require Sum Insured; ambulance requires Basic Sum Insured and the flat cap. Missing required monetary bases result in NEEDS_REVIEW when no decisive exclusion or waiting-period failure already determines the claim outcome. These expectations are established from policy wording and supplied case facts, not from system predictions.",
+  "PUB-001": {
+    "expected_decision": "NEEDS_REVIEW",
+    "rationale": "The claim has room and ambulance expenses requiring Basic Sum Insured and doctor fees requiring Sum Assured. Neither amount is supplied. A complete payable estimate cannot safely be calculated."
+  },
+  "PUB-002": {
+    "expected_decision": "NOT_ADMISSIBLE",
+    "rationale": "The claim falls within the initial 30-day waiting period, with no applicable continuity exception."
+  },
+  "PUB-003": {
+    "expected_decision": "NOT_ADMISSIBLE",
+    "rationale": "The pre-existing disease waiting period is 48 months, while only 27 months of continuous coverage are established."
+  },
+  "PUB-004": {
+    "expected_decision": "NEEDS_REVIEW",
+    "rationale": "Domiciliary expenses are subject to a percentage of Basic Sum Insured. Basic Sum Insured is not supplied, so the applicable cap and payable amount cannot safely be calculated."
+  },
+  "PUB-005": {
+    "expected_decision": "NEEDS_REVIEW",
+    "rationale": "The day-care procedure is eligible, but doctor fees require a cap based on Sum Assured. Sum Assured is not supplied, so the complete payable amount cannot safely be calculated."
+  },
+  "PUB-006": {
+    "expected_decision": "NEEDS_REVIEW",
+    "rationale": "Hospital registration and medical necessity remain unconfirmed in the supplied evidence."
+  },
+  "PUB-007": {
+    "expected_decision": "NEEDS_REVIEW",
+    "rationale": "Room expenses require Basic Sum Insured, doctor fees require Sum Assured, and ambulance expenses require Basic Sum Insured. These monetary bases are not supplied."
+  },
+  "PUB-008": {
+    "expected_decision": "NOT_ADMISSIBLE",
+    "rationale": "The cosmetic treatment falls within the policy's explicit cosmetic-treatment exclusion."
+  },
+  "PUB-009": {
+    "expected_decision": "NEEDS_REVIEW",
+    "rationale": "Room expenses require Basic Sum Insured and doctor fees require Sum Assured. Neither is supplied, so a complete payable estimate cannot safely be calculated."
+  },
+  "PUB-010": {
+    "expected_decision": "NEEDS_REVIEW",
+    "rationale": "The continuity evidence addresses the waiting-period issue, but doctor fees require Sum Assured, which is not supplied."
+  },
+  "PUB-011": {
+    "expected_decision": "NEEDS_REVIEW",
+    "rationale": "The non-network hospital's registration and minimum hospital criteria cannot be confirmed from the supplied evidence."
+  },
+  "PUB-012": {
+    "expected_decision": "NEEDS_REVIEW",
+    "rationale": "The supplied policy wording does not establish a sufficiently explicit experimental-treatment exclusion for a definitive rejection."
+  },
+  "CUST-001": {
+    "expected_decision": "NOT_ADMISSIBLE",
+    "rationale": "The caesarean delivery falls within the policy's explicit pregnancy, childbirth and caesarean-section exclusion."
+  },
+  "CUST-002": {
+    "expected_decision": "NEEDS_REVIEW",
+    "rationale": "The 48-month pre-existing disease waiting period has elapsed, but room expenses require Basic Sum Insured and doctor fees require Sum Assured. Neither is supplied."
+  },
+  "CUST-003": {
+    "expected_decision": "NOT_ADMISSIBLE",
+    "rationale": "The injury sustained while intoxicated falls within the policy's alcohol/intoxicating-substance exclusion."
+  },
+  "CUST-004": {
+    "expected_decision": "NEEDS_REVIEW",
+    "rationale": "Room and ambulance limits require Basic Sum Insured, and doctor fees require Sum Assured. These amounts are not supplied."
+  },
+  "CUST-005": {
+    "expected_decision": "NOT_ADMISSIBLE",
+    "rationale": "The claim occurs within the initial 30-day waiting period, and the supplied policy wording does not establish an accidental-injury carve-out."
+  },
+  "CUST-006": {
+    "expected_decision": "NEEDS_REVIEW",
+    "rationale": "Hospital registration evidence is absent. The required monetary bases for room and doctor expenses are also missing."
+  },
+  "NEW-ADM-001": {
+    "expected_decision": "ADMISSIBLE",
+    "rationale": "The claim is an eligible inpatient hospitalization, the initial waiting period and other waiting periods are satisfied, the network hospital satisfies the hospital definition, no named exclusion is indicated, all required monetary bases are supplied, and each claimed category is within its applicable policy cap."
+  },
+  "NEW-ADM-002": {
+    "expected_decision": "ADMISSIBLE",
+    "rationale": "The claim is an eligible inpatient hospitalization, the initial waiting period and other waiting periods are satisfied, the network hospital satisfies the hospital definition, no named exclusion is indicated, all required monetary bases are supplied, and each claimed category is within its applicable policy cap."
+  },
+  "NEW-ADM-003": {
+    "expected_decision": "ADMISSIBLE",
+    "rationale": "The claim is an eligible inpatient hospitalization, the initial waiting period and other waiting periods are satisfied, the network hospital satisfies the hospital definition, no named exclusion is indicated, all required monetary bases are supplied, and each claimed category is within its applicable policy cap."
+  },
+  "NEW-ADM-004": {
+    "expected_decision": "ADMISSIBLE",
+    "rationale": "The claim is an eligible inpatient hospitalization, the initial waiting period and other waiting periods are satisfied, the network hospital satisfies the hospital definition, no named exclusion is indicated, all required monetary bases are supplied, and each claimed category is within its applicable policy cap."
+  },
+  "NEW-ADM-005": {
+    "expected_decision": "ADMISSIBLE",
+    "rationale": "The claim is an eligible inpatient hospitalization, the initial waiting period and other waiting periods are satisfied, the network hospital satisfies the hospital definition, no named exclusion is indicated, all required monetary bases are supplied, and each claimed category is within its applicable policy cap."
+  },
+  "NEW-ADM-006": {
+    "expected_decision": "ADMISSIBLE",
+    "rationale": "The claim is an eligible inpatient hospitalization, the initial waiting period and other waiting periods are satisfied, the network hospital satisfies the hospital definition, no named exclusion is indicated, all required monetary bases are supplied, and each claimed category is within its applicable policy cap."
+  },
+  "NEW-LIM-001": {
+    "expected_decision": "ADMISSIBLE_WITH_LIMITS",
+    "rationale": "The underlying hospitalization is covered, but room exceeds its cap. The relevant insured monetary bases are supplied, so the applicable deduction can be calculated; the expected status is ADMISSIBLE_WITH_LIMITS."
+  },
+  "NEW-LIM-002": {
+    "expected_decision": "ADMISSIBLE_WITH_LIMITS",
+    "rationale": "The underlying hospitalization is covered, but icu exceeds its cap. The relevant insured monetary bases are supplied, so the applicable deduction can be calculated; the expected status is ADMISSIBLE_WITH_LIMITS."
+  },
+  "NEW-LIM-003": {
+    "expected_decision": "ADMISSIBLE_WITH_LIMITS",
+    "rationale": "The underlying hospitalization is covered, but doctor_fees exceeds its cap. The relevant insured monetary bases are supplied, so the applicable deduction can be calculated; the expected status is ADMISSIBLE_WITH_LIMITS."
+  },
+  "NEW-LIM-004": {
+    "expected_decision": "ADMISSIBLE_WITH_LIMITS",
+    "rationale": "The underlying hospitalization is covered, but medicines_diagnostics exceeds its cap. The relevant insured monetary bases are supplied, so the applicable deduction can be calculated; the expected status is ADMISSIBLE_WITH_LIMITS."
+  },
+  "NEW-LIM-005": {
+    "expected_decision": "ADMISSIBLE_WITH_LIMITS",
+    "rationale": "The underlying hospitalization is covered, but ambulance exceeds its cap. The relevant insured monetary bases are supplied, so the applicable deduction can be calculated; the expected status is ADMISSIBLE_WITH_LIMITS."
+  },
+  "NEW-LIM-006": {
+    "expected_decision": "ADMISSIBLE_WITH_LIMITS",
+    "rationale": "The underlying hospitalization is covered, but room exceeds its cap, doctor_fees exceeds its cap. The relevant insured monetary bases are supplied, so the applicable deduction can be calculated; the expected status is ADMISSIBLE_WITH_LIMITS."
+  },
+  "NEW-PAR-001": {
+    "expected_decision": "PARTIALLY_ADMISSIBLE",
+    "rationale": "The core inpatient hospitalization is otherwise covered and its monetary bases are supplied, but pre-hospitalisation expenses exceed the 30-day window. Only the out-of-window portion is disallowed, so the expected status is PARTIALLY_ADMISSIBLE."
+  },
+  "NEW-PAR-002": {
+    "expected_decision": "PARTIALLY_ADMISSIBLE",
+    "rationale": "The core inpatient hospitalization is otherwise covered and its monetary bases are supplied, but post-hospitalisation expenses exceed the 60-day window. Only the out-of-window portion is disallowed, so the expected status is PARTIALLY_ADMISSIBLE."
+  },
+  "NEW-PAR-003": {
+    "expected_decision": "PARTIALLY_ADMISSIBLE",
+    "rationale": "The core inpatient hospitalization is otherwise covered and its monetary bases are supplied, but pre-hospitalisation expenses exceed the 30-day window. Only the out-of-window portion is disallowed, so the expected status is PARTIALLY_ADMISSIBLE."
+  },
+  "NEW-PAR-004": {
+    "expected_decision": "PARTIALLY_ADMISSIBLE",
+    "rationale": "The core inpatient hospitalization is otherwise covered and its monetary bases are supplied, but post-hospitalisation expenses exceed the 60-day window. Only the out-of-window portion is disallowed, so the expected status is PARTIALLY_ADMISSIBLE."
+  },
+  "NEW-PAR-005": {
+    "expected_decision": "PARTIALLY_ADMISSIBLE",
+    "rationale": "The core inpatient hospitalization is otherwise covered and its monetary bases are supplied, but pre-hospitalisation expenses exceed the 30-day window and post-hospitalisation expenses exceed the 60-day window. Only the out-of-window portion is disallowed, so the expected status is PARTIALLY_ADMISSIBLE."
+  },
+  "NEW-PAR-006": {
+    "expected_decision": "PARTIALLY_ADMISSIBLE",
+    "rationale": "The core inpatient hospitalization is otherwise covered and its monetary bases are supplied, but pre-hospitalisation expenses exceed the 30-day window. Only the out-of-window portion is disallowed, so the expected status is PARTIALLY_ADMISSIBLE."
+  }
+}

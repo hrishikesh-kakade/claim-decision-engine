@@ -15,6 +15,11 @@ Hybrid retrieval over the policy chunk store.
     handed to the reasoning agents. Swap in a real cross-encoder
     (e.g. BAAI/bge-reranker-base) by implementing `Reranker` in rerank.py --
     the interface is already isolated for that.
+
+      * Optional rerank: a lightweight lexical-overlap + section-prior reranker
+    is available as an experimental ablation (see rerank.py). Production
+    retrieval uses the fused hybrid ranking without reranking.
+
 """
 from __future__ import annotations
 
@@ -164,11 +169,30 @@ class HybridRetriever:
         return {int(idx): r + 1 for r, idx in enumerate(dense_order)}
 
     # --------------------------------------------------------------- search
-    def search(self, query: str, top_k_each: int = 15, top_k_final: int = 6) -> list[RetrievedChunk]:
+
+    """mode (used by eval/retrieval_eval.py for ablations):
+    'sparse' = BM25 only,
+    'dense' = vector search only,
+    'hybrid' = BM25 + dense fused with RRF (production),
+    'hybrid_rerank' = hybrid followed by experimental lexical reranking."""
+
+    def search(self, query: str, top_k_each: int = 15, top_k_final: int = 6,
+               mode: str = "hybrid") -> list[RetrievedChunk]:
+        """mode (used by eval/retrieval_eval.py for ablations; production always
+        uses the default): 'sparse' = BM25 only, 'dense' = vector search only,
+        'hybrid' = BM25 + dense fused with RRF (no rerank),
+        'hybrid_rerank' = hybrid followed by the reranker (default)."""
         bm25_scores = self._bm25.get_scores(tokenize(query))
         sparse_order = np.argsort(-bm25_scores)[:top_k_each]
         sparse_rank = {int(idx): r + 1 for r, idx in enumerate(sparse_order)}
         dense_rank = self._dense_rank(query, top_k_each)
+
+        if mode == "sparse":
+            sparse_rank, dense_rank = sparse_rank, {}
+        elif mode == "dense":
+            sparse_rank, dense_rank = {}, dense_rank
+        elif mode not in ("hybrid", "hybrid_rerank"):
+            raise ValueError(f"unknown retrieval mode {mode!r}")
 
         candidates = set(sparse_rank) | set(dense_rank)
         k_rrf = 60
@@ -198,6 +222,8 @@ class HybridRetriever:
         fused.sort(key=lambda x: -x.fused_score)
         shortlist = fused[: max(top_k_final * 3, 10)]
 
+        if mode != "hybrid_rerank":
+            return shortlist[:top_k_final]
         reranked = self.reranker.rerank(query, shortlist)
         return reranked[:top_k_final]
 

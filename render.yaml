@@ -1,0 +1,19 @@
+# Render Blueprint. Push this repo to GitHub, then in Render:
+#   New -> Blueprint -> connect this repo -> Render auto-detects this file.
+# Fill in the secret env vars (GROQ_API_KEY etc.) in the Render dashboard
+# after the service is created -- never commit real keys here.
+services:
+  - type: web
+    name: claim-decision-engine-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile.backend
+    dockerContext: .
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: LLM_PROVIDER
+        value: groq
+      - key: GROQ_API_KEY
+        sync: false          # set manually in the Render dashboard (Environment tab) -- never in this file
+      - key: GROQ_MODEL
+        value: llama-3.1-8b-instant

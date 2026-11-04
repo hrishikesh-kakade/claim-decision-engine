@@ -75,9 +75,9 @@ class PolicyParameters:
         both = ["SCOPE_OF_COVER", "EXCLUSIONS"]
         self.ambulance_pct = self._pct(both, r"Ambulance charges[\s\S]{0,80}?limited to\s*([\d.]+)%")
         self.ambulance_flat = self._num(both, r"Ambulance charges[\s\S]{0,120}?Rupees\s*([\d,]+)/?-?\s*whichever is less")
-        self.daily_allowance_pct = self._pct(both, r"Daily Allowance amount equivalent to\s*([\d.]+)%")
-        self.daily_allowance_flat = self._num(both, r"Daily Allowance[\s\S]{0,80}?Rs\.?\s*([\d,]+)/?-?\s*per day")
-        self.daily_allowance_cap = self._num(both, r"maximum amount payable under this extension[s]? is limited to Rs\s*([\d,]+)")
+        # self.daily_allowance_pct = self._pct(both, r"Daily Allowance amount equivalent to\s*([\d.]+)%")
+        # self.daily_allowance_flat = self._num(both, r"Daily Allowance[\s\S]{0,80}?Rs\.?\s*([\d,]+)/?-?\s*per day")
+        # self.daily_allowance_cap = self._num(both, r"maximum amount payable under this extension[s]? is limited to Rs\s*([\d,]+)")
 
         self.pre_hosp_days = self._num(both, r"Pre-Hospitalisation up to a maximum of\s*(\d+)\s*days")
         self.post_hosp_days = self._num(both, r"Post\s*Hospitalisation expenses up to a maximum of\s*(\d+)\s*days")

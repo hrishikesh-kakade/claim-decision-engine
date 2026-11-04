@@ -5,5 +5,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ backend/
 COPY data/ data/
 COPY scripts/ scripts/
+COPY policy/ policy/
+
+# Render (and HF Spaces) assign a dynamic port via $PORT / bind to 7860 --
+# using the shell form of CMD so $PORT actually expands at container start.
+# Falls back to 8000 for plain `docker run` with no PORT set.
+ENV PORT=8000
 EXPOSE 8000
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD uvicorn backend.main:app --host 0.0.0.0 --port ${PORT}

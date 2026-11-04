@@ -4,6 +4,11 @@ must pass the Validation Agent, and abstention must actually happen for
 the cases that require it. This is deliberately the same check the eval
 script does, kept here too so `python -m unittest` alone catches a
 regression without needing to run the full eval/reporting pipeline."""
+
+"""End-to-end regression test against policy-aware expected decisions.
+Every public case must reproduce its expected decision and pass validation.
+"""
+
 import json
 import sys
 import unittest
@@ -16,7 +21,7 @@ from backend.models import ClaimCase  # noqa: E402
 from backend.orchestrator import ClaimEngine  # noqa: E402
 
 PUBLIC_CASES = ROOT / "data" / "public_test_cases.json"
-EXPECTED = ROOT / "eval" / "expected_outcomes.json"
+EXPECTED = ROOT / "eval" / "policy_aware_expected_outcomes.json"
 
 
 class TestPublicCases(unittest.TestCase):

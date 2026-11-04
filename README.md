@@ -1,15 +1,5 @@
 # Policy-Aware Multi-Agent RAG Claim Decision Engine
 
-## 🌐 Live Deployments
-
-- **Live Streamlit Frontend (Reviewer UI):** [https://claim-decision-engine-frontend.streamlit.app/](https://claim-decision-engine-frontend.streamlit.app/)
-  
-
-## 📚 Architecture & Design
-For details on agent boundaries, state flow, hybrid RAG strategy, and architectural trade-offs, see [ARCHITECTURE.md](./ARCHITECTURE.md).
-
----
-
 A small, evidence-grounded claims-decision system for the USGIC "CSC –
 Individual Health Insurance" policy (UNIHLIP18004V011718). Given a claim
 case, it returns a structured decision (`ADMISSIBLE`,
@@ -88,6 +78,7 @@ irm https://astral.sh/uv/install.ps1 | iex
 # 1. project setup
 cd repo
 uv init --bare
+uv python pin 3.11
 uv venv
 .venv\Scripts\Activate.ps1
 uv pip install -r requirements.txt
@@ -273,6 +264,19 @@ where a material finding lacks a citation, or a citation points at a
 chunk_id that doesn't exist in the policy store — i.e. citation
 correctness is enforced structurally, not just measured.
 
+## Benchmarks and resume metrics
+
+One command produces decision-quality, retrieval-ablation, citation-faithfulness and latency metrics
+(p50/p95/p99, Hit@k, MRR, nDCG, context precision/recall, Wilson CIs, unsafe-approval rate):
+
+```bash
+uv run python eval/run_all.py                                              # deterministic, no API calls
+uv run python eval/run_all.py --llm-judge --narration --with-llm-latency   # also uses your LLM key
+uv run python eval/perf_bench.py --api-url http://localhost:8000 --requests 60 --concurrency 4   # HTTP load test
+```
+Results land in `eval/results/METRICS_REPORT.md`. Every formula, the honest limits of each number and
+resume-safe wording are in `docs/METRICS.md`.
+
 ## Failure analysis (found during development, in order)
 
 1. **Day-care citation silently missing → false PASS/FAIL flip.**
@@ -387,66 +391,35 @@ correctness is enforced structurally, not just measured.
   agents without meaningful separation" — each of the five agents here has
   a genuinely distinct input/output type and responsibility.
 
+## Deployment
 
-## Deployment Architecture & Setup
+Two working paths, both entirely free:
 
-                      ┌────────────────────────┐
-                      │   Streamlit Cloud      │
-                      │   (Frontend UI)        │
-                      └───────────┬────────────┘
-                                  │
-                     REST API Requests (HTTPS)
-                     `POST /analyze`
-                     `GET /policy/chunks/{id}`
-                                  │
-                                  ▼
-                      ┌────────────────────────┐
-                      │   Railway Container    │
-                      │   (FastAPI Backend)    │
-                      └───────────┬────────────┘
-                                  │
-                    ┌─────────────┴─────────────┐
-                    ▼                           ▼
-        ┌───────────────────────┐   ┌───────────────────────┐
-        │ Persistent Vector DB  │   │   Groq LLM Service    │
-        │  (Chroma / BM25 RAG)  │   │ (Narration Layer Only)│
-        └───────────────────────┘   └───────────────────────┘
+### Option A — Render (backend) + Streamlit Community Cloud (frontend)
+No Docker subscription required anywhere.
 
----
+1. Push this repo to GitHub.
+2. **Backend:** render.com → sign up with GitHub → **New +** → **Blueprint**
+   → select the repo. Render auto-detects `render.yaml` (already in this
+   repo) and provisions a free web service from `Dockerfile.backend`. Set
+   `GROQ_API_KEY` in the dashboard when prompted (deliberately not
+   committed to `render.yaml`). Note the resulting URL.
+3. **Frontend:** share.streamlit.io → sign in with GitHub → **New app** →
+   this repo, main file `frontend/streamlit_app.py` → **Advanced settings
+   → Secrets**, add `CLAIM_API_URL = "https://<your-render-backend-url>"`
+   → **Deploy**.
+4. Render's free tier spins the backend down after 15 minutes idle — the
+   first request after that takes ~30–50s (cold start + re-embedding 110
+   chunks into Chroma). Normal, not a bug.
 
-### Production Deployment Pipeline
+### Option B — Hugging Face Spaces (Docker SDK)
+Two Spaces (backend + frontend), each built from `Dockerfile.backend` /
+`Dockerfile.frontend` respectively — note these platforms assign a dynamic
+port (`$PORT` on Render, `7860` on HF Spaces), which both Dockerfiles
+already handle via a shell-form `CMD`. Set secrets (`GROQ_API_KEY` etc.) in
+each Space's **Settings → Variables and secrets**, never committed. May
+require billing verification on some HF accounts for the Docker SDK,
+which is why Option A exists as a no-card-required alternative.
 
-#### 1. Repository Source Control
-* **GitHub Repository:** [`hrishikesh-kakade/claim-decision-engine`](https://github.com/hrishikesh-kakade/claim-decision-engine)
-* Multi-stage build support with separate container instructions for backend services (`Dockerfile.backend`) and frontend apps (`Dockerfile.frontend`).
-
----
-
-#### 2. Backend Engine Deployment (Railway)
-* **Hosting Platform:** Railway (Docker Container Runtime)
-* **Entry Specification:** Built via `Dockerfile.backend` exposing port `8000`.
-* **Index Initialization:** The Docker build phase automatically builds and mounts the Chroma persistent vector database alongside the sparse BM25 index on startup.
-* **Environment & Security Management:** Sensitive credentials are securely injected via Railway's Service Environment Settings:
-  * `GROQ_API_KEY`: API key for Groq LLM inference.
-  * `GROQ_MODEL`: Specified model (e.g., `llama-3.3-70b`).
-  * `PORT`: Dynamically bound by the container orchestrator.
-
----
-
-#### 3. Reviewer Dashboard Deployment (Streamlit Community Cloud)
-* **Hosting Platform:** Streamlit Community Cloud
-* **Entry Point:** `frontend/streamlit_app.py`
-* **Configuration & Secret Injection:**
-  * Configured via **App Settings → Secrets** to securely connect to the Railway instance:
-    ```toml
-    CLAIM_API_URL = "[https://claim-decision-engine-production-8083.up.railway.app](https://claim-decision-engine-production-8083.up.railway.app)"
-    ```
-* **Continuous Deployment:** Configured with GitHub webhooks for automatic re-deployment upon pushes to the `main` branch.
-
----
-
-### Alternative Deployment Topology (Containerized Dual-Space)
-
-For environments requiring single-provider isolation or containerized edge hosting (e.g., Hugging Face Spaces):
-* **Backend Container Space:** Deployed using `Dockerfile.backend` with dynamic `$PORT` shell execution (`CMD uvicorn backend.main:app --host 0.0.0.0 --port $PORT`).
-* **Frontend Container Space:** Deployed using `Dockerfile.frontend` configured with environment variable binding `CLAIM_API_URL` pointing to the backend Space's public URL.
+In both options: keep secrets in the platform's own secret manager, never
+in `render.yaml`, a Dockerfile, or committed `.env`.

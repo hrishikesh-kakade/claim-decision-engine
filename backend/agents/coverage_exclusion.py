@@ -283,94 +283,289 @@ def _day_care_duration(case: ClaimCase, f: dict, pp: PolicyParameters) -> Findin
 def _domiciliary(case: ClaimCase, f: dict, pp: PolicyParameters) -> tuple[Finding, dict | None]:
     t = case.treatment
     citations = []
+
     if pp.domiciliary_def_chunk:
-        citations.append(_cite(pp, pp.domiciliary_def_chunk, "Domiciliary Treatment definition"))
-    condition_met = bool(t.hospital_room_unavailable) or bool(t.patient_cannot_be_moved)
+        citations.append(
+            _cite(pp, pp.domiciliary_def_chunk, "Domiciliary Treatment definition")
+        )
+
+    condition_met = (
+        bool(t.hospital_room_unavailable)
+        or bool(t.patient_cannot_be_moved)
+    )
+
     if not condition_met:
         return Finding(
             dimension="domiciliary_treatment_conditions",
-            statement="Neither 'room unavailable' nor 'patient cannot be moved' is confirmed, so the Domiciliary Treatment definition is not satisfied.",
-            supports_decision="unfavorable", confidence=0.8, citations=citations,
+            statement=(
+                "Neither 'room unavailable' nor 'patient cannot be moved' is "
+                "confirmed, so the Domiciliary Treatment definition is not satisfied."
+            ),
+            supports_decision="unfavorable",
+            confidence=0.8,
+            citations=citations,
         ), None
 
-    limit = None
-    if pp.domiciliary_pct.value is not None:
-        cap = pp.domiciliary_pct.value * case.sum_insured_inr
-        domiciliary_expenses = (
-            case.expenses_inr.room + case.expenses_inr.doctor_fees + case.expenses_inr.medicines_diagnostics
+    domiciliary_expenses = (
+        case.expenses_inr.room
+        + case.expenses_inr.doctor_fees
+        + case.expenses_inr.medicines_diagnostics
+    )
+
+    if domiciliary_expenses <= 0:
+        return Finding(
+            dimension="domiciliary_treatment_conditions",
+            statement=(
+                "The Domiciliary Treatment definition is satisfied, but no "
+                "domiciliary expenses were supplied for sub-limit calculation."
+            ),
+            supports_decision="favorable",
+            confidence=0.8,
+            citations=citations,
+        ), None
+
+    if pp.domiciliary_pct.value is None:
+        return Finding(
+            dimension="domiciliary_treatment_conditions",
+            statement=(
+                "The Domiciliary Treatment conditions are satisfied, but the "
+                "policy's domiciliary percentage limit could not be extracted. "
+                "The payable amount cannot safely be calculated."
+            ),
+            supports_decision="uncertain",
+            confidence=0.4,
+            citations=citations,
+        ), None
+
+    if case.basic_sum_insured_inr is None:
+        return Finding(
+            dimension="domiciliary_treatment_conditions",
+            statement=(
+                "The Domiciliary Treatment conditions are satisfied, but Basic "
+                "Sum Insured was not supplied. The policy applies the domiciliary "
+                "sub-limit to Basic Sum Insured, so the cap and payable amount "
+                "cannot safely be calculated."
+            ),
+            supports_decision="uncertain",
+            confidence=0.4,
+            citations=_cite_param(
+                pp.domiciliary_pct,
+                "Domiciliary aggregate sub-limit is based on Basic Sum Insured",
+                pp,
+            ),
+        ), None
+
+    cap = pp.domiciliary_pct.value * case.basic_sum_insured_inr
+    payable = min(domiciliary_expenses, cap)
+
+    limit = {
+        "limit_name": "Domiciliary hospitalisation aggregate sub-limit",
+        "cap_pct_of_sum_insured": None,
+        "cap_pct": pp.domiciliary_pct.value,
+        "cap_basis": "Basic Sum Insured",
+        "cap_inr": cap,
+        "claimed_inr": domiciliary_expenses,
+        "payable_inr": payable,
+        "chunk_id": pp.domiciliary_pct.chunk_id,
+    }
+
+    citations.extend(
+        _cite_param(
+            pp.domiciliary_pct,
+            "Domiciliary aggregate sub-limit based on Basic Sum Insured",
+            pp,
         )
-        payable = min(domiciliary_expenses, cap)
-        limit = {
-            "limit_name": "Domiciliary hospitalisation aggregate sub-limit",
-            "cap_pct_of_sum_insured": pp.domiciliary_pct.value,
-            "cap_inr": cap,
-            "claimed_inr": domiciliary_expenses,
-            "payable_inr": payable,
-            "chunk_id": pp.domiciliary_pct.chunk_id,
-        }
-        citations.append(_cite_by_id(pp, pp.domiciliary_pct.chunk_id, "20% of Sum Insured aggregate sub-limit for domiciliary hospitalisation"))
-    verdict = "favorable" if (limit is None or limit["payable_inr"] >= limit["claimed_inr"]) else "neutral"
+    )
+
+    verdict = "favorable" if payable >= domiciliary_expenses else "neutral"
+
     return Finding(
         dimension="domiciliary_treatment_conditions",
         statement=(
             "The Domiciliary Treatment definition is satisfied "
-            f"({'room unavailable' if t.hospital_room_unavailable else 'patient could not be moved'}); "
-            "the 20% aggregate sub-limit applies to the domiciliary expenses, and pre/post-hospitalisation "
-            "expenses are separately excluded for domiciliary claims."
+            f"({'room unavailable' if t.hospital_room_unavailable else 'patient could not be moved'}). "
+            f"The {pp.domiciliary_pct.value:.1%} aggregate sub-limit is calculated "
+            f"on Basic Sum Insured, resulting in a cap of INR {cap:,.0f}. "
+            "Pre/post-hospitalisation expenses are separately excluded for "
+            "domiciliary claims."
         ),
-        supports_decision=verdict, confidence=0.8, citations=citations,
+        supports_decision=verdict,
+        confidence=0.85,
+        citations=citations,
     ), limit
 
 
-def _sub_limits(case: ClaimCase, f: dict, pp: PolicyParameters) -> tuple[list[Finding], list[dict]]:
-    si = case.sum_insured_inr
+def _sub_limits(
+    case: ClaimCase,
+    f: dict,
+    pp: PolicyParameters,
+) -> tuple[list[Finding], list[dict]]:
     e = case.expenses_inr
+
     findings: list[Finding] = []
     limits: list[dict] = []
+    missing_basis: list[str] = []
 
-    def add_limit(name: str, param: Param, claimed: float, section_hint: str):
-        if param.value is None or claimed <= 0:
+    def add_limit(
+        name: str,
+        param: Param,
+        claimed: float,
+        basis_name: str,
+        basis_value: float | None,
+    ) -> None:
+        if claimed <= 0:
             return
-        cap = param.value * si
+
+        if param.value is None:
+            missing_basis.append(
+                f"{name}: the policy percentage could not be extracted."
+            )
+            return
+
+        if basis_value is None:
+            missing_basis.append(
+                f"{name}: {basis_name} was not supplied, so its cap "
+                "cannot safely be calculated."
+            )
+            return
+
+        cap = param.value * basis_value
         payable = min(claimed, cap)
+
         limits.append({
-            "limit_name": name, "cap_pct_of_sum_insured": param.value, "cap_inr": cap,
-            "claimed_inr": claimed, "payable_inr": payable, "chunk_id": param.chunk_id,
+            "limit_name": name,
+            "cap_pct_of_sum_insured": (
+                param.value if basis_name == "Sum Insured" else None
+            ),
+            "cap_pct": param.value,
+            "cap_basis": basis_name,
+            "cap_inr": cap,
+            "claimed_inr": claimed,
+            "payable_inr": payable,
+            "chunk_id": param.chunk_id,
         })
 
-    add_limit("Room, boarding & nursing expenses", pp.room_pct, e.room, "room")
-    add_limit("Doctor/surgeon/consultant fees", pp.doctor_fee_pct, e.doctor_fees, "doctor")
-    add_limit("Medicines, diagnostics & similar expenses", pp.other_expenses_pct, e.medicines_diagnostics, "other")
+    # Room expenses: percentage of Basic Sum Insured.
+    add_limit(
+        "Room, boarding & nursing expenses",
+        pp.room_pct,
+        e.room,
+        "Basic Sum Insured",
+        case.basic_sum_insured_inr,
+    )
 
-    if pp.ambulance_flat.value is not None and e.ambulance > 0:
-        pct_cap = (pp.ambulance_pct.value or 0) * si
-        cap = min(pct_cap, pp.ambulance_flat.value) if pp.ambulance_pct.value else pp.ambulance_flat.value
-        payable = min(e.ambulance, cap)
-        limits.append({
-            "limit_name": "Ambulance charges", "cap_pct_of_sum_insured": pp.ambulance_pct.value,
-            "cap_inr": cap, "claimed_inr": e.ambulance, "payable_inr": payable,
-            "chunk_id": pp.ambulance_flat.chunk_id,
-        })
+        # ICU expenses: percentage of Basic Sum Insured.
+    add_limit(
+        "Intensive Care Unit (ICU) expenses",
+        pp.icu_pct,
+        e.icu,
+        "Basic Sum Insured",
+        case.basic_sum_insured_inr,
+    )
+
+    # Doctor fees: percentage of Sum Assured.
+    add_limit(
+        "Doctor/surgeon/consultant fees",
+        pp.doctor_fee_pct,
+        e.doctor_fees,
+        "Sum Assured",
+        case.sum_assured_inr,
+    )
+
+    # Other expenses: percentage of Sum Insured.
+    add_limit(
+        "Medicines, diagnostics & similar expenses",
+        pp.other_expenses_pct,
+        e.medicines_diagnostics,
+        "Sum Insured",
+        case.sum_insured_inr,
+    )
+
+    # Ambulance: lower of percentage of Basic Sum Insured and flat cap.
+    if e.ambulance > 0:
+        if pp.ambulance_pct.value is None:
+            missing_basis.append(
+                "Ambulance charges: the policy percentage could not be extracted."
+            )
+        elif pp.ambulance_flat.value is None:
+            missing_basis.append(
+                "Ambulance charges: the policy's flat monetary cap "
+                "could not be extracted."
+            )
+        elif case.basic_sum_insured_inr is None:
+            missing_basis.append(
+                "Ambulance charges: Basic Sum Insured was not supplied, "
+                "so the percentage cap cannot safely be calculated."
+            )
+        else:
+            percentage_cap = (
+                pp.ambulance_pct.value * case.basic_sum_insured_inr
+            )
+            cap = min(percentage_cap, pp.ambulance_flat.value)
+            payable = min(e.ambulance, cap)
+
+            limits.append({
+                "limit_name": "Ambulance charges",
+                "cap_pct_of_sum_insured": None,
+                "cap_pct": pp.ambulance_pct.value,
+                "cap_basis": "Basic Sum Insured",
+                "cap_inr": cap,
+                "claimed_inr": e.ambulance,
+                "payable_inr": payable,
+                "chunk_id": pp.ambulance_pct.chunk_id,
+            })
+
+    # An unknown cap must not be silently treated as an unlimited category.
+    if missing_basis:
+        findings.append(Finding(
+            dimension="sub_limits_and_deductions",
+            statement=(
+                "One or more monetary limits could not be calculated because "
+                "required policy parameters or insured amounts are missing: "
+                + " ".join(missing_basis)
+                + " A complete payable estimate cannot safely be produced."
+            ),
+            supports_decision="uncertain",
+            confidence=0.4,
+            citations=[],
+        ))
 
     total_claimed = sum(li["claimed_inr"] for li in limits)
     total_payable = sum(li["payable_inr"] for li in limits)
-    any_deduction = any(li["payable_inr"] < li["claimed_inr"] for li in limits)
+    any_deduction = any(
+        li["payable_inr"] < li["claimed_inr"] for li in limits
+    )
 
-    citations = [
-        _cite_by_id(pp, li["chunk_id"], f"{li['limit_name']} capped at {li['cap_pct_of_sum_insured']*100:.1f}% of Sum Insured")
-        for li in limits if li["chunk_id"] and li.get("cap_pct_of_sum_insured") is not None
-    ]
-    verdict = "neutral"
+    citations = []
+    for li in limits:
+        if li.get("chunk_id"):
+            citations.append(
+                _cite_by_id(
+                    pp,
+                    li["chunk_id"],
+                    (
+                        f"{li['limit_name']} capped at "
+                        f"{li['cap_pct']:.1%} of {li['cap_basis']}"
+                    ),
+                )
+            )
+
     findings.append(Finding(
         dimension="sub_limits_and_deductions",
         statement=(
-            f"Category sub-limits cap payable room/doctor/other-expense amounts at "
-            f"INR {total_payable:,.0f} against INR {total_claimed:,.0f} claimed under those categories"
-            if any_deduction else
-            f"Claimed room/doctor/other-expense amounts (INR {total_claimed:,.0f}) fall within their respective category sub-limits."
+            f"Calculated category sub-limits allow INR {total_payable:,.0f} "
+            f"against INR {total_claimed:,.0f} claimed across categories "
+            "whose limits could be calculated."
+            if any_deduction
+            else
+            f"Claimed amounts totalling INR {total_claimed:,.0f} fall within "
+            "the calculated category sub-limits."
         ),
-        supports_decision=verdict, confidence=0.85, citations=citations,
+        supports_decision="neutral",
+        confidence=0.85,
+        citations=citations,
     ))
+
     return findings, limits
 
 

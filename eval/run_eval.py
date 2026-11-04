@@ -1,55 +1,22 @@
-"""
-End-to-end evaluation script. Runs every supplied public case plus every
-candidate-created case through the ClaimEngine in-process (fast,
-reproducible, zero network calls needed), scores decision accuracy against
-`eval/expected_outcomes.json`, extracts the retrieval citation-hit-rate
-that the orchestrator already computes per case, and writes both a
-machine-readable JSON report and a human-readable Markdown summary.
 
-Run:
-    python eval/run_eval.py
-    python eval/run_eval.py --api-url http://localhost:8000   # hit a running API instead
-"""
+"""Run the policy-aware decision evaluation over public and custom cases."""
 from __future__ import annotations
 
 import argparse
 import json
 import re
-import sys
-from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT))
-
-from dotenv import load_dotenv  # noqa: E402
-
-load_dotenv(ROOT / ".env")
-
-from backend.models import ClaimCase  # noqa: E402
-from backend.orchestrator import ClaimEngine  # noqa: E402
-
-CASES_PUBLIC = ROOT / "data" / "public_test_cases.json"
-CASES_CUSTOM = ROOT / "eval" / "cases" / "custom_cases.json"
-EXPECTED = ROOT / "eval" / "expected_outcomes.json"
-OUT_DIR = ROOT / "eval" / "results"
+import common
 
 HIT_RATE_RE = re.compile(r"Citation/retrieval overlap: (\d+)/(\d+)")
 
 
-def load_cases() -> list[dict]:
-    cases = json.loads(CASES_PUBLIC.read_text())
-    cases += json.loads(CASES_CUSTOM.read_text())
-    return cases
-
-
-def run_in_process(cases: list[dict]) -> list[dict]:
-    engine = ClaimEngine()
-    results = []
-    for raw in cases:
-        case = ClaimCase.model_validate(raw)
-        resp = engine.analyze(case)
-        results.append(json.loads(resp.model_dump_json()) if hasattr(resp, "model_dump_json") else resp.dict())
-    return results
+def extract_hit_rate(trace: list[dict]) -> tuple[int, int] | None:
+    for step in trace:
+        match = HIT_RATE_RE.search(step.get("detail", ""))
+        if match:
+            return int(match.group(1)), int(match.group(2))
+    return None
 
 
 def run_via_api(cases: list[dict], api_url: str) -> list[dict]:
@@ -57,102 +24,149 @@ def run_via_api(cases: list[dict], api_url: str) -> list[dict]:
 
     results = []
     for raw in cases:
-        r = requests.post(f"{api_url.rstrip('/')}/analyze", json=raw, timeout=60)
-        r.raise_for_status()
-        results.append(r.json())
+        response = requests.post(
+            f"{api_url.rstrip('/')}/analyze",
+            json=raw,
+            timeout=60,
+        )
+        response.raise_for_status()
+        results.append(response.json())
     return results
 
 
-def extract_hit_rate(trace: list[dict]) -> tuple[int, int] | None:
-    for step in trace:
-        m = HIT_RATE_RE.search(step.get("detail", ""))
-        if m:
-            return int(m.group(1)), int(m.group(2))
-    return None
-
-
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--api-url", default=None, help="If set, POSTs to a running API instead of running in-process.")
-    args = ap.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--api-url",
+        default=None,
+        help="POST to a running API instead of running in-process.",
+    )
+    args = parser.parse_args()
 
-    cases = load_cases()
-    expected = json.loads(EXPECTED.read_text())
+    cases = common.load_cases()
+    expected = json.loads(common.EXPECTED.read_text())
+
+    case_ids = [case["case_id"] for case in cases]
+    expected_ids = set(expected) - {"_method"}
+
+    if len(case_ids) != len(set(case_ids)):
+        raise ValueError("Duplicate case IDs found in input cases")
+
+    if set(case_ids) != expected_ids:
+        raise ValueError(
+            "Expected-outcome coverage mismatch. "
+            f"Missing: {sorted(expected_ids - set(case_ids))}; "
+            f"unexpected: {sorted(set(case_ids) - expected_ids)}"
+        )
+
+    for cid in case_ids:
+        if "expected_decision" not in expected[cid]:
+            raise ValueError(f"Missing expected_decision for {cid}")
 
     if args.api_url:
         results = run_via_api(cases, args.api_url)
     else:
-        results = run_in_process(cases)
+        engine, _ = common.build_engine()
+        results = common.run_in_process(engine, cases)
 
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    if len(results) != len(cases):
+        raise ValueError(
+            f"Case/response count mismatch: {len(cases)} cases, "
+            f"{len(results)} responses"
+        )
+
     rows = []
-    n_correct = 0
-    n_needs_review_expected = 0
-    n_needs_review_actual = 0
-    n_validation_pass = 0
-    hit_num_total, hit_den_total = 0, 0
+    hit_num_total = 0
+    hit_den_total = 0
+    validation_pass = 0
+    correct = 0
+    needs_review_expected = 0
+    needs_review_actual = 0
 
-    for raw, resp in zip(cases, results):
+    for raw, response in zip(cases, results):
         cid = raw["case_id"]
-        exp = expected.get(cid, {})
-        exp_decision = exp.get("expected_decision")
-        actual_decision = resp["decision"]
-        correct = (exp_decision == actual_decision) if exp_decision else None
-        if correct:
-            n_correct += 1
-        if exp_decision == "NEEDS_REVIEW":
-            n_needs_review_expected += 1
-        if actual_decision == "NEEDS_REVIEW":
-            n_needs_review_actual += 1
-        if resp["validation"]["status"] == "PASS":
-            n_validation_pass += 1
-        hr = extract_hit_rate(resp.get("trace", []))
-        if hr:
-            hit_num_total += hr[0]
-            hit_den_total += hr[1]
+        if response.get("case_id") != cid:
+            raise ValueError(
+                f"Response order/ID mismatch: expected {cid}, "
+                f"received {response.get('case_id')}"
+            )
+
+        expected_decision = expected[cid]["expected_decision"]
+        actual_decision = response["decision"]
+        match = expected_decision == actual_decision
+
+        correct += int(match)
+        needs_review_expected += int(expected_decision == "NEEDS_REVIEW")
+        needs_review_actual += int(actual_decision == "NEEDS_REVIEW")
+        validation_pass += int(response["validation"]["status"] == "PASS")
+
+        hit_rate = extract_hit_rate(response.get("trace", []))
+        if hit_rate:
+            hit_num_total += hit_rate[0]
+            hit_den_total += hit_rate[1]
 
         rows.append({
             "case_id": cid,
-            "expected_decision": exp_decision,
+            "expected_decision": expected_decision,
             "actual_decision": actual_decision,
-            "match": correct,
-            "confidence": resp["confidence"],
-            "payable_estimate_inr": resp.get("payable_estimate_inr"),
-            "validation_status": resp["validation"]["status"],
-            "citation_hit_rate": f"{hr[0]}/{hr[1]}" if hr else None,
-            "rationale_expected": exp.get("rationale"),
+            "match": match,
+            "confidence": response.get("confidence"),
+            "payable_estimate_inr": response.get("payable_estimate_inr"),
+            "validation_status": response["validation"]["status"],
+            "citation_hit_rate": (
+                f"{hit_rate[0]}/{hit_rate[1]}" if hit_rate else None
+            ),
+            "rationale_expected": expected[cid].get("rationale"),
         })
 
-    n_total = len(cases)
-    n_scored = sum(1 for r in rows if r["expected_decision"])
+    total = len(cases)
     summary = {
-        "total_cases": n_total,
-        "decision_accuracy": round(n_correct / n_scored, 3) if n_scored else None,
-        "correct": n_correct,
-        "scored": n_scored,
-        "needs_review_expected": n_needs_review_expected,
-        "needs_review_actual": n_needs_review_actual,
-        "validation_pass_rate": round(n_validation_pass / n_total, 3),
-        "citation_hit_rate_overall": round(hit_num_total / hit_den_total, 3) if hit_den_total else None,
+        "total_cases": total,
+        "decision_accuracy": correct / total if total else None,
+        "correct": correct,
+        "scored": total,
+        "needs_review_expected": needs_review_expected,
+        "needs_review_actual": needs_review_actual,
+        "validation_pass_rate": validation_pass / total if total else None,
+        "citation_hit_rate_overall": (
+            hit_num_total / hit_den_total if hit_den_total else None
+        ),
+        "expectation_source": str(common.EXPECTED.relative_to(common.ROOT)),
     }
 
-    (OUT_DIR / "eval_results.json").write_text(json.dumps({"summary": summary, "cases": rows}, indent=2))
+    report = {"summary": summary, "cases": rows}
+    common.write_json("eval_results.json", report)
 
-    lines = ["# Evaluation Results", "", "## Summary", ""]
-    for k, v in summary.items():
-        lines.append(f"- **{k}**: {v}")
-    lines += ["", "## Per-case", "", "| case_id | expected | actual | match | confidence | payable_inr | validation | citation_hit_rate |",
-              "|---|---|---|---|---|---|---|---|"]
-    for r in rows:
+    lines = [
+        "# Evaluation Results",
+        "",
+        f"Expected decisions: `{summary['expectation_source']}`",
+        "",
+        "## Summary",
+        "",
+    ]
+    for key, value in summary.items():
+        lines.append(f"- **{key}**: {value}")
+
+    lines += [
+        "",
+        "## Per-case",
+        "",
+        "| case_id | expected | actual | match | confidence | payable_inr | validation | citation_hit_rate |",
+        "|---|---|---|---|---|---|---|---|",
+    ]
+
+    for row in rows:
         lines.append(
-            f"| {r['case_id']} | {r['expected_decision']} | {r['actual_decision']} | "
-            f"{'✅' if r['match'] else ('❌' if r['match'] is False else '—')} | {r['confidence']:.2f} | "
-            f"{r['payable_estimate_inr']} | {r['validation_status']} | {r['citation_hit_rate']} |"
+            f"| {row['case_id']} | {row['expected_decision']} | "
+            f"{row['actual_decision']} | {row['match']} | "
+            f"{row['confidence']} | {row['payable_estimate_inr']} | "
+            f"{row['validation_status']} | {row['citation_hit_rate']} |"
         )
-    (OUT_DIR / "eval_results.md").write_text("\n".join(lines), encoding="utf-8")
 
-    print(json.dumps(summary, indent=2))
-    print(f"\nWrote {OUT_DIR / 'eval_results.json'} and eval_results.md")
+    report_path = common.OUT_DIR / "eval_results.md"
+    report_path.write_text("\n".join(lines) + "\n")
+    print("\n".join(lines))
 
 
 if __name__ == "__main__":
